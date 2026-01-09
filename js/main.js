@@ -1,5 +1,6 @@
-// --- Cart Logic ---
-// Expose getCart/setCart globally for cross-page compatibility
+// --- Cart & Product Logic ---
+
+// Utility: Get/Set Cart
 window.getCart = function() {
   return JSON.parse(localStorage.getItem('cart') || '[]');
 };
@@ -9,9 +10,9 @@ window.setCart = function(newCart) {
   updateCartCount();
   renderCart();
 };
-let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+let cart = window.getCart();
 
-// Load products from localStorage if available (for stock persistence)
+// Utility: Get/Set Products
 function loadProducts() {
   const stored = localStorage.getItem('products');
   if (stored) {
@@ -21,31 +22,27 @@ function loadProducts() {
       return parsed;
     } catch (e) {}
   }
-  return window.products;
+  return window.products || [];
 }
-
 function saveProducts(products) {
   localStorage.setItem('products', JSON.stringify(products));
 }
-
 function saveCart() {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
+// Cart Count UI
 function updateCartCount() {
   const count = cart.reduce((sum, item) => sum + item.qty, 0);
-  const els = [
-    document.getElementById('cart-count'),
-    document.getElementById('nav-cart-count')
-  ];
-  els.forEach(el => { if (el) el.textContent = count; });
-  // Close nav when X or overlay is clicked
+  [document.getElementById('cart-count'), document.getElementById('nav-cart-count')].forEach(el => {
+    if (el) el.textContent = count;
+  });
+  // Nav close button
   const closeBtn = document.querySelector('.side-nav .close-nav');
-  if (closeBtn) {
-    closeBtn.onclick = function() { toggleNav(false); };
-  }
+  if (closeBtn) closeBtn.onclick = () => toggleNav(false);
 }
 
+// Cart Sidebar UI
 function renderCart() {
   const cartItems = document.getElementById('cart-items');
   if (!cartItems) return;
@@ -65,7 +62,7 @@ function renderCart() {
   `).join('');
 }
 
-
+// Cart Notification
 function showAddedToCartMessage(message) {
   let msg = document.getElementById('added-to-cart-msg');
   if (!msg) {
@@ -83,13 +80,10 @@ function showAddedToCartMessage(message) {
   }, 1200);
 }
 
+// Add to Cart (handles variants)
 function addToCart(product) {
-  // Treat each color as a unique cart item
-  const idx = cart.findIndex(i =>
-    i.id === product.id &&
-    (i.colorName || null) === (product.colorName || null)
-  );
-  // Find available stock for this color
+  const idx = cart.findIndex(i => i.id === product.id && (i.colorName || null) === (product.colorName || null));
+  // Find available stock for this color/variant
   let availableStock = null;
   const prodData = allProducts.find(p => p.id === product.id);
   if (prodData && product.colorName && prodData.colors) {
@@ -114,10 +108,10 @@ function addToCart(product) {
   showAddedToCartMessage();
 }
 
+// Remove from Cart
 function removeFromCart(id, colorName) {
   cart = cart.filter(i => {
     if (i.id !== id) return true;
-    // If colorName is provided, only remove the matching color variant
     if ((i.colorName || null) !== (colorName || null)) return true;
     return false;
   });
@@ -126,74 +120,63 @@ function removeFromCart(id, colorName) {
   renderCart();
 }
 
+// Cart Sidebar Toggle
 function toggleCart() {
   const sidebar = document.querySelector('.cart-sidebar');
   const overlay = document.querySelector('.cart-overlay');
-  sidebar.classList.toggle('active');
-  overlay.classList.toggle('active');
+  if (sidebar) sidebar.classList.toggle('active');
+  if (overlay) overlay.classList.toggle('active');
 }
+function continueShopping() { toggleCart(); }
 
-function continueShopping() {
-  toggleCart();
-}
-
+// Checkout: Decrement stock, clear cart, update UI/storage
 function checkoutCart() {
-  // For each cart item, reduce the stock in allProducts
   cart.forEach(item => {
     const prod = allProducts.find(p => p.id === item.id);
     if (prod && item.colorName && prod.colors) {
       const colorObj = prod.colors.find(c => c.name === item.colorName);
-      if (colorObj) {
-        colorObj.stock = Math.max(0, colorObj.stock - item.qty);
-      }
+      if (colorObj) colorObj.stock = Math.max(0, colorObj.stock - item.qty);
     } else if (prod && !item.colorName && prod.stock !== undefined) {
       prod.stock = Math.max(0, prod.stock - item.qty);
     }
   });
-  // Persist updated products to localStorage and sync in-memory window.products
   saveProducts(allProducts);
   window.products = allProducts;
-  // Clear cart
   cart = [];
   saveCart();
   updateCartCount();
   renderCart();
-  // Force reload allProducts from localStorage to ensure UI reflects new stock
   allProducts = loadProducts();
   window.products = allProducts;
   renderProducts();
-  // Broadcast cart and product update to other tabs
+  // Sync across tabs
   localStorage.setItem('cart', JSON.stringify(cart));
   localStorage.setItem('products', JSON.stringify(allProducts));
   window.dispatchEvent(new Event('storage'));
   showAddedToCartMessage('Checkout complete! Stock updated.');
 }
 
-// On page load
-updateCartCount();
-renderCart();
+// --- Product List & Search ---
 
-// Hamburger alignment fix for all pages
 document.addEventListener('DOMContentLoaded', function() {
+  // Hamburger alignment fix
   const wrap = document.querySelector('.hamburger-wrap');
   if (wrap) wrap.style.alignItems = 'flex-start';
 });
-const shop = document.getElementById("shop");
+
+const shop = document.getElementById('shop');
 const searchInput = document.querySelector('.search-input');
 let allProducts = [];
 
-// Get category from URL
 function getCategory() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("category");
+  return params.get('category');
 }
 
-// Format price
 function formatPrice(amount) {
-  return new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(amount);
+  return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
 }
 
-// Render products (optionally filtered)
 function renderProducts(filter = "") {
   if (!shop) return;
   const category = getCategory();
@@ -209,9 +192,9 @@ function renderProducts(filter = "") {
     return;
   }
   list.forEach(product => {
-    const card = document.createElement("div");
-    card.className = "product-card";
-    // Sort colors: available first, sold out last
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    // Sort colors: available first
     let sortedColors = [];
     if (product.colors && product.colors.length > 0) {
       sortedColors = [...product.colors].sort((a, b) => (a.stock === 0) - (b.stock === 0));
@@ -248,7 +231,7 @@ function renderProducts(filter = "") {
     const imgEl = card.querySelector('.product-img-main');
     const swatches = card.querySelectorAll('.color-swatch');
     const stockEl = card.querySelector('.stock');
-    const button = card.querySelector("button");
+    const button = card.querySelector('button');
     const ribbon = card.querySelector('.ribbon');
     if (swatches.length) {
       swatches.forEach((swatch, i) => {
@@ -282,7 +265,6 @@ function renderProducts(filter = "") {
       button.textContent = "Add to cart";
       if (ribbon) ribbon.style.display = 'none';
       button.onclick = () => {
-        // Only add the selected variant, not the whole product/colors array
         let prodToCart = {
           id: product.id,
           name: product.name,
@@ -299,12 +281,8 @@ function renderProducts(filter = "") {
   });
 }
 
-// DEBUG: Check if products are loaded and search input is found
-console.log('DEBUG: window.products', window.products);
-console.log('DEBUG: searchInput', searchInput);
+// --- Initialization ---
 
-
-// Ensure products are loaded before rendering and searching
 function initProductSearch() {
   allProducts = loadProducts();
   window.products = allProducts;
@@ -328,7 +306,7 @@ window.addEventListener('storage', function(e) {
     renderProducts();
   }
   if (e.key === 'cart') {
-    cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    cart = window.getCart();
     updateCartCount();
     renderCart();
   }
