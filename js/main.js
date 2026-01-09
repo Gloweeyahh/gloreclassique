@@ -268,6 +268,8 @@ function renderProducts(filter = "") {
   });
 }
 
+fetch ("https://gloreclassique.onrender.com/")
+  .catch(() => {});
 // Paystack payment
 function payWithPaystack(product) {
   const customerEmail = prompt("Enter your email");
@@ -347,3 +349,4 @@ function initProductSearch() {
   }
 }
 initProductSearch();
+
