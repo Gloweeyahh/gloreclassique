@@ -3,9 +3,7 @@
 // ...existing code...
 
 // Root route to show backend is live
-app.get('/', (req, res) => {
-  res.send('Glore Classique backend is live.');
-});
+
 // --- Contact form email ---
 app.post('/api/send-contact', async (req, res) => {
   const { name, email, message } = req.body;
@@ -99,3 +97,4 @@ app.post('/api/send-proof', upload.single('proofFile'), async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
