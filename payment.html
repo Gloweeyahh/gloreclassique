@@ -5,6 +5,71 @@
   <title>Payment | Gloré Classique</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .payment-details-box {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5em;
+    }
+    .account-details {
+      margin-bottom: 1.5em;
+    }
+    .proof-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.7em;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+    }
+    .proof-form input[type="text"],
+    .proof-form input[type="email"],
+    .proof-form input[type="file"] {
+      font-size: 1.13em;
+      padding: 1em 1.2em;
+      border-radius: 8px;
+      border: 1.5px solid #d2d2d2;
+      background: #fff;
+      margin-top: 0.1em;
+      transition: border 0.2s;
+    }
+    .proof-form input:focus {
+      border: 1.5px solid #b7a6e7;
+      outline: none;
+    }
+    .proof-form label {
+      font-size: 1.08em;
+      font-weight: 500;
+      color: #3a2e5c;
+    }
+    .btn.btn-primary.btn-full {
+      margin-top: 0.7em;
+      font-size: 1.13em;
+      padding: 1.1em 0;
+      border-radius: 8px;
+    }
+    .proof-status {
+      margin-top: 1.3em;
+      text-align: center;
+      font-size: 1.08em;
+    }
+    @media (max-width: 600px) {
+      .payment-details-box {
+        gap: 1.5em;
+      }
+      .proof-form {
+        gap: 1.1em;
+      }
+      .proof-form input[type="text"],
+      .proof-form input[type="email"],
+      .proof-form input[type="file"] {
+        font-size: 1em;
+        padding: 0.8em 0.7em;
+      }
+    }
+  </style>
 </head>
 <body>
 <div class="top-bar">
