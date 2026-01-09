@@ -127,88 +127,25 @@
 </footer>
 <script src="js/main.js"></script>
 <script>
-// --- Robust Cart, Nav, and Checkout Submission Logic ---
-// Fallbacks for cart logic if main.js fails
-if (typeof getCart !== 'function') {
-  window.getCart = function() {
-    try {
-      return JSON.parse(localStorage.getItem('cart') || '[]');
-    } catch (e) {
-      return [];
-    }
-  };
-}
-if (typeof updateCartCount !== 'function') {
-  window.updateCartCount = function() {
-    var cart = getCart();
-    var count = cart.reduce(function(sum, item) { return sum + (item.qty || 0); }, 0);
-    var els = [
-      document.getElementById('cart-count'),
-      document.getElementById('nav-cart-count')
-    ];
-    els.forEach(function(el) { if (el) el.textContent = count; });
-  };
-}
-
+// --- Checkout Submission ---
 document.addEventListener('DOMContentLoaded', function() {
-  // Always update cart count on load
   updateCartCount();
 
-  // Nav and cart sidebar open/close
-  var hamburger = document.querySelector('.hamburger');
-  var navOverlay = document.querySelector('.nav-overlay');
-  var cartBtn = document.querySelector('.cart-btn');
-  var cartOverlay = document.querySelector('.cart-overlay');
-  var closeCart = document.querySelector('.close-cart');
-  var sideNav = document.querySelector('nav.side-nav');
-  var topBar = document.querySelector('.top-bar');
-  var cartSidebar = document.querySelector('.cart-sidebar');
-  if (hamburger) {
-    hamburger.onclick = function() {
-      sideNav.classList.toggle('active');
-      navOverlay.classList.toggle('active');
-      topBar.classList.toggle('nav-open');
-    };
-  }
-  if (navOverlay) {
-    navOverlay.onclick = function() {
-      sideNav.classList.remove('active');
-      navOverlay.classList.remove('active');
-      topBar.classList.remove('nav-open');
-    };
-  }
-  if (cartBtn) {
-    cartBtn.onclick = function() {
-      cartSidebar.classList.add('active');
-      cartOverlay.classList.add('active');
-    };
-  }
-  if (cartOverlay) {
-    cartOverlay.onclick = function() {
-      cartSidebar.classList.remove('active');
-      cartOverlay.classList.remove('active');
-    };
-  }
-  if (closeCart) {
-    closeCart.onclick = function() {
-      cartSidebar.classList.remove('active');
-      cartOverlay.classList.remove('active');
-    };
-  }
-
-  // Checkout form submission via Resend API
   var checkoutForm = document.getElementById('checkout-form');
   if (checkoutForm) {
     checkoutForm.addEventListener('submit', async function(e) {
       e.preventDefault();
       var form = e.target;
-      // Build a plain-text summary for email
-      var cartArr = (typeof getCart === 'function' ? getCart() : []);
+
+      // --- PATCH: Get only valid cart items ---
+      var cartArr = (typeof getCart === 'function' ? getCart() : []).filter(item => item.qty > 0);
+
       var summaryText = cartArr.length ? cartArr.map(function(item, idx) {
         return (
           (idx+1) + '. ' + item.name + (item.colorName ? ' (' + item.colorName + ')' : '') + ' x' + item.qty + ' - ₦' + item.price.toLocaleString()
         );
       }).join('\n') : 'No items in cart.';
+
       var data = {
         name: form.name.value,
         email: form.email.value,
@@ -220,19 +157,22 @@ document.addEventListener('DOMContentLoaded', function() {
         cart: cartArr,
         summary: summaryText
       };
+
       var btn = form.querySelector('button[type="submit"]');
       var origBtn = btn ? btn.textContent : '';
       if (btn) btn.textContent = 'Sending...';
+
       try {
         var res = await fetch('https://gloreclassique.onrender.com/api/send-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
+
         if (res.ok) {
           form.reset();
           if (btn) btn.textContent = 'Order Sent!';
-          setTimeout(function(){ if(btn) btn.textContent = origBtn; }, 2000);
+          setTimeout(() => { if(btn) btn.textContent = origBtn; }, 2000);
           window.location.href = 'payment.html';
         } else {
           if (btn) btn.textContent = origBtn;
@@ -245,84 +185,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-// --- Delivery Fee Logic ---
-const DELIVERY_FEES = [
-  { match: /abuja/i, fee: 3000 },
-  { match: /lagos/i, fee: 5000 },
-  { match: /port\s*harcourt|phc/i, fee: 6000 },
-  { match: /kano/i, fee: 4500 },
-  { match: /enugu/i, fee: 5500 },
-  { match: /kaduna/i, fee: 3000 },
-  { match: /jos/i, fee: 3000 },
-  { match: /benin/i, fee: 5500 },
-  { match: /ibadan/i, fee: 5000 },
-  { match: /onitsha/i, fee: 5500 },
-  { match: /maiduguri/i, fee: 7000 },
-];
-const DEFAULT_DELIVERY_FEE = 6000;
-
-function getDeliveryFee(state) {
-  if (!state) return 0;
-  for (const entry of DELIVERY_FEES) {
-    if (entry.match.test(state)) return entry.fee;
-  }
-  return DEFAULT_DELIVERY_FEE;
-}
-
-function renderCheckoutSummary() {
-  const summary = document.getElementById('checkout-summary');
-  if (!summary) return;
-  if (typeof getCart !== 'function') {
-    summary.innerHTML = '<div class="empty-summary">Cart unavailable. Please reload.</div>';
-    return;
-  }
-  let cart = getCart();
-  if (!cart || !cart.length) {
-    summary.innerHTML = '<div class="empty-summary">Your cart is empty.</div>';
-    return;
-  }
-  let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  // Get state input value
-  const stateInput = document.getElementById('state');
-  const stateVal = stateInput ? stateInput.value.trim() : '';
-  const deliveryFee = getDeliveryFee(stateVal);
-  summary.innerHTML = `
-    <h3 class="summary-title">Order Summary</h3>
-    <ul class="summary-list">
-      ${cart.map(item => `
-        <li class="summary-item">
-          <span class="summary-thumb-wrap">
-            <img src="${item.image}" alt="${item.name}" class="summary-thumb">
-          </span>
-          <span class="summary-info">
-            <span class="summary-name">${item.name}${item.colorName ? ` <span class='summary-color'>(${item.colorName})</span>` : ''}</span>
-            <span class="summary-qty">× ${item.qty}</span>
-            <span class="summary-prices">
-              ${item.oldPrice ? `<span class='old-price'>₦${item.oldPrice.toLocaleString()}</span>` : ''}
-              <span class="price">₦${item.price.toLocaleString()}</span>
-            </span>
-          </span>
-        </li>
-      `).join('')}
-    </ul>
-    <div class="summary-fee"><span>Delivery Fee</span><span>₦${deliveryFee.toLocaleString()}</span></div>
-    <div class="summary-total"><span>Total</span><span>₦${(total + deliveryFee).toLocaleString()}</span></div>
-  `;
-}
-
-// Initial render
-document.addEventListener('DOMContentLoaded', function() {
-  renderCheckoutSummary();
-  // Update summary when state changes
-  const stateInput = document.getElementById('state');
-  if (stateInput) {
-    stateInput.addEventListener('input', renderCheckoutSummary);
-  }
-  // Update summary when cart changes (listen for storage events)
-  window.addEventListener('storage', function(e) {
-    if (e.key === 'cart') renderCheckoutSummary();
-  });
-});
 </script>
+
 </body>
 </html>
+
