@@ -121,7 +121,7 @@ document.getElementById('proof-form').addEventListener('submit', async function(
   if (btn) btn.textContent = 'Sending...';
   var formData = new FormData(form);
   try {
-    var res = await fetch('/api/send-proof', {
+    var res = await fetch('https://gloreclassique.onrender.com/api/send-proof', {
       method: 'POST',
       body: formData
     });
