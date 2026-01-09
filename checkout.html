@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var origBtn = btn ? btn.textContent : '';
       if (btn) btn.textContent = 'Sending...';
       try {
-        var res = await fetch('/api/send-email', {
+        var res = await fetch('https://gloreclassique.onrender.com/api/send-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
