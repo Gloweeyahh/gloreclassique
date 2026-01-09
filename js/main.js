@@ -11,6 +11,21 @@ window.setCart = function(newCart) {
 };
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
+// Load products from localStorage if available (for stock persistence)
+function loadProducts() {
+  const stored = localStorage.getItem('products');
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (e) {}
+  }
+  return window.products;
+}
+
+function saveProducts(products) {
+  localStorage.setItem('products', JSON.stringify(products));
+}
+
 function saveCart() {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
@@ -133,12 +148,21 @@ function checkoutCart() {
       prod.stock = Math.max(0, prod.stock - item.qty);
     }
   });
+  // Persist updated products to localStorage and sync in-memory window.products
+  saveProducts(allProducts);
+  if (window.products) {
+    window.products = allProducts;
+  }
   // Clear cart
   cart = [];
   saveCart();
   updateCartCount();
   renderCart();
   renderProducts();
+  // Broadcast cart and product update to other tabs
+  localStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem('products', JSON.stringify(allProducts));
+  window.dispatchEvent(new Event('storage'));
   showAddedToCartMessage('Checkout complete! Stock updated.');
 }
 
@@ -268,85 +292,22 @@ function renderProducts(filter = "") {
   });
 }
 
-fetch ("https://gloreclassique.onrender.com/")
-  .catch(() => {});
-// Paystack payment
-function payWithPaystack(product) {
-  const customerEmail = prompt("Enter your email");
-  if (!customerEmail) return;
-
-  const customerName = prompt("Enter your full name");
-  if (!customerName) return;
-
-  const customerPhone = prompt("Enter your phone number");
-  if (!customerPhone) return;
-
-  PaystackPop.setup({
-    key: "YOUR_PUBLIC_KEY_HERE",
-    email: customerEmail,
-    amount: product.price * 100,
-    currency: "NGN",
-    ref: "BAG_" + Math.floor(Math.random() * 1000000000),
-    callback: async (response) => {
-      // Send order to backend
-      await fetch("https://YOUR_BACKEND_URL_HERE/api/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productId: product.id,
-          name: customerName,
-          email: customerEmail,
-          phone: customerPhone,
-          reference: response.reference
-        })
-      });
-
-      // Re-render to update stock
-      renderProducts();
-      alert("Payment successful! 🎉 Your order has been confirmed.");
-    },
-    onClose: () => alert("Payment cancelled")
-  }).openIframe();
-}
-
 // DEBUG: Check if products are loaded and search input is found
 console.log('DEBUG: window.products', window.products);
 console.log('DEBUG: searchInput', searchInput);
 
+
 // Ensure products are loaded before rendering and searching
 function initProductSearch() {
-  if (window.products && Array.isArray(window.products)) {
+  allProducts = loadProducts();
+  if (!allProducts || !Array.isArray(allProducts)) {
     allProducts = window.products;
-    console.log('DEBUG: allProducts set', allProducts);
-    renderProducts();
-    if (searchInput) {
-      searchInput.addEventListener('input', function(e) {
-        console.log('DEBUG: search input event', this.value);
-        renderProducts(this.value);
-      });
-    } else {
-      console.log('DEBUG: searchInput not found');
-    }
-  } else {
-    // Try again after DOMContentLoaded if not ready
-    document.addEventListener('DOMContentLoaded', function() {
-      if (window.products && Array.isArray(window.products)) {
-        allProducts = window.products;
-        console.log('DEBUG: allProducts set (DOMContentLoaded)', allProducts);
-        renderProducts();
-        if (searchInput) {
-          searchInput.addEventListener('input', function(e) {
-            console.log('DEBUG: search input event (DOMContentLoaded)', this.value);
-            renderProducts(this.value);
-          });
-        } else {
-          console.log('DEBUG: searchInput not found (DOMContentLoaded)');
-        }
-      } else {
-        console.log('DEBUG: window.products not found (DOMContentLoaded)');
-      }
+  }
+  renderProducts();
+  if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+      renderProducts(this.value);
     });
   }
 }
 initProductSearch();
-
