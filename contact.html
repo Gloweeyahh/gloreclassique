@@ -62,14 +62,51 @@
       </div>
       <div class="contact-card">
         <form class="contact-form" action="https://formsubmit.co/gloreclassique@gmail.com" method="POST">
-          <input type="hidden" name="_subject" value="New Contact Form Submission - Gloré Classique">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="_template" value="box">
           <input type="text" name="name" placeholder="Your Name" required>
           <input type="email" name="email" placeholder="Your Email" required>
           <textarea name="message" placeholder="Your Message" required></textarea>
           <button type="submit" class="btn btn-primary btn-full">Send message</button>
         </form>
+        <div id="contact-status" class="proof-status"></div>
+      // Contact form submission to backend
+      document.addEventListener('DOMContentLoaded', function() {
+        var contactForm = document.querySelector('.contact-form');
+        if (contactForm) {
+          contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            var form = e.target;
+            var status = document.getElementById('contact-status');
+            if (status) status.textContent = '';
+            var btn = form.querySelector('button[type="submit"]');
+            var origBtn = btn ? btn.textContent : '';
+            if (btn) btn.textContent = 'Sending...';
+            var data = {
+              name: form.name.value,
+              email: form.email.value,
+              message: form.message.value
+            };
+            try {
+              var res = await fetch('https://gloreclassique.onrender.com/api/send-contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+              if (res.ok) {
+                form.reset();
+                if (status) { status.textContent = 'Message sent! We will reply soon.'; status.style.color = 'green'; }
+                if (btn) btn.textContent = 'Sent!';
+                setTimeout(function(){ if(btn) btn.textContent = origBtn; }, 2000);
+              } else {
+                if (status) { status.textContent = 'Failed to send. Please try again.'; status.style.color = 'red'; }
+                if (btn) btn.textContent = origBtn;
+              }
+            } catch (err) {
+              if (status) { status.textContent = 'Network error. Please try again.'; status.style.color = 'red'; }
+              if (btn) btn.textContent = origBtn;
+            }
+          });
+        }
+      });
       </div>
     </div>
   </section>
