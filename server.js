@@ -1,10 +1,14 @@
+// Root route to show backend is live
+app.get('/', (req, res) => {
+  res.send('Glore Classique backend is live.');
+});
 // --- Contact form email ---
 app.post('/api/send-contact', async (req, res) => {
   const { name, email, message } = req.body;
   try {
     await resend.emails.send({
       from: 'Glore Classique <noreply@gloreclassique.com>',
-      to: glowemeka@gmail.com,
+      to: RECIPIENT_EMAIL,
       subject: 'New Contact Form Submission',
       html: `<h2>Contact Form Submission</h2>
         <p><b>Name:</b> ${name}</p>
@@ -29,7 +33,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const RECIPIENT_EMAIL = 'glowemeka@gmail.com'; // <-- PUT YOUR EMAIL HERE
+const RECIPIENT_EMAIL = 'glowemeka@gail.com'; // <-- PUT YOUR EMAIL HERE
 
 
 app.use(cors());
@@ -43,7 +47,7 @@ app.post('/api/send-email', async (req, res) => {
   try {
     await resend.emails.send({
       from: 'Glore Classique <noreply@gloreclassique.com>',
-      to: glowemeka@gmail.com, // <-- YOUR EMAIL
+      to: RECIPIENT_EMAIL, // <-- YOUR EMAIL
       subject: 'New Order from Glore Classique',
       html: `<h2>New Order</h2>
         <p><b>Name:</b> ${data.name}</p>
@@ -69,7 +73,7 @@ app.post('/api/send-proof', upload.single('proofFile'), async (req, res) => {
   try {
     await resend.emails.send({
       from: 'Glore Classique <noreply@gloreclassique.com>',
-      to: glowemeka@gmail.com, // <-- YOUR EMAIL
+      to: RECIPIENT_EMAIL, // <-- YOUR EMAIL
       subject: 'Proof of Payment Upload',
       html: `<h2>Proof of Payment</h2>
         <p><b>Name:</b> ${payerName}</p>
