@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment | Gloré Classique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="top-bar">
+  <div class="brand-header-stack">
+    <span class="brand-header-top">Gloré</span>
+    <span class="brand-header-bottom">Classique</span>
+  </div>
+</div>
+<div class="page">
+  <div class="content">
+    <main>
+      <section>
+        <div class="shell">
+          <div class="fancy-eyebrow">Payment Details</div>
+          <h2>Complete Your Payment</h2>
+          <div class="payment-details-box">
+            <div class="account-details">
+              <h3>Bank Transfer Details</h3>
+              <ul class="account-list">
+                <li><strong>Bank Name:</strong> Opay</li>
+                <li><strong>Account Number:</strong> 07036630817</li>
+                <li><strong>Account Name:</strong> Gloria Emeka</li>
+              </ul>
+              <div class="alert-info">After payment, upload your proof of payment below.</div>
+            </div>
+            <form id="proof-form" class="proof-form" enctype="multipart/form-data">
+              <h3>Upload Proof of Payment</h3>
+              <div class="form-group"><label for="payerName">Your Name</label><input type="text" id="payerName" name="payerName" required></div>
+              <div class="form-group"><label for="payerEmail">Your Email</label><input type="email" id="payerEmail" name="payerEmail" required></div>
+              <div class="form-group"><label for="orderInfo">Order Info <span style="color:#aaa;font-weight:400;">(optional)</span></label><input type="text" id="orderInfo" name="orderInfo"></div>
+              <div class="form-group"><label for="proofFile">Proof of Payment (image/pdf)</label><input type="file" id="proofFile" name="proofFile" accept="image/*,application/pdf" required></div>
+              <button type="submit" class="btn btn-primary btn-full">Send Proof</button>
+            </form>
+            <div id="proof-status" class="proof-status"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script>
+document.getElementById('proof-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  var form = e.target;
+  var status = document.getElementById('proof-status');
+  status.textContent = '';
+  var btn = form.querySelector('button[type="submit"]');
+  var origBtn = btn ? btn.textContent : '';
+  if (btn) btn.textContent = 'Sending...';
+  var formData = new FormData(form);
+  try {
+    var res = await fetch('/api/send-proof', {
+      method: 'POST',
+      body: formData
+    });
+    if (res.ok) {
+      form.reset();
+      status.textContent = 'Proof sent! We will confirm your payment soon.';
+      status.style.color = 'green';
+      if (btn) btn.textContent = 'Sent!';
+      setTimeout(function(){ if(btn) btn.textContent = origBtn; }, 2000);
+    } else {
+      status.textContent = 'Failed to send proof. Please try again.';
+      status.style.color = 'red';
+      if (btn) btn.textContent = origBtn;
+    }
+  } catch (err) {
+    status.textContent = 'Network error. Please try again.';
+    status.style.color = 'red';
+    if (btn) btn.textContent = origBtn;
+  }
+});
+</script>
+</body>
+</html>

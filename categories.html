@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Categories | Gloré Classique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="categories-page">
+<div class="top-bar">
+  <div class="hamburger-wrap">
+    <button class="hamburger" type="button" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="brand-header-stack">
+    <span class="brand-header-top">Gloré</span>
+    <span class="brand-header-bottom">Classique</span>
+  </div>
+  <div style="flex:1"></div>
+  <button class="cart-btn" type="button" aria-label="View cart">
+    <span class="cart-icon-wrap" style="position:relative;display:inline-block;">
+      <span class="cart-icon">🛒</span>
+      <span id="cart-count" class="cart-count">0</span>
+    </span>
+  </button>
+</div>
+<div class="nav-overlay"></div>
+<div class="cart-overlay" tabindex="-1"></div>
+<aside class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="close-cart" type="button" aria-label="Close cart">&times;</button>
+  </div>
+  <div id="cart-items" class="cart-items"></div>
+  <div class="cart-footer">
+    <a class="btn btn-ghost" href="shop.html">Add more to cart</a>
+    <a class="btn btn-primary" href="checkout.html">Checkout</a>
+  </div>
+</aside>
+<div class="page">
+<div class="content">
+<main>
+  <section>
+    <div class="shell">
+      <div class="eyebrow fancy-eyebrow">Curate your mood</div>
+      <h2>Shop by category</h2>
+      <p class="section-lead">Your favorite bags, grouped into categories, for your ease.</p>
+      <div id="category-view" style="display:none;"></div>
+      <div class="card-grid" id="category-list">
+        <div class="category-card">
+          <div class="category-pill">Budget Luxury</div>
+          <h3>Curated, affordable, everyday luxury.</h3>
+          <p>Signature bags with blush, cocoa, and classic tones. Perfect for daily style and versatility.</p>
+          <div class="category-actions">
+            <a class="btn btn-ghost" href="categories.html?category=Budget%20Luxury">View Budget Luxury</a>
+          </div>
+        </div>
+        <div class="category-card">
+          <div class="category-pill">Tote Bags</div>
+          <h3>Spacious, structured, and stylish.</h3>
+          <p>Carry everything with ease. Soft handles, roomy interiors, and timeless silhouettes.</p>
+          <div class="category-actions">
+            <a class="btn btn-ghost" href="categories.html?category=Tote%20Bags">View Tote Bags</a>
+          </div>
+        </div>
+        <div class="category-card">
+          <div class="category-pill">Statement</div>
+          <h3>Bold, sculptural, and unique.</h3>
+          <p>Limited drops, luxe textures, and standout designs for impact and presence.</p>
+          <div class="category-actions">
+            <a class="btn btn-ghost" href="categories.html?category=Statement">View Statement</a>
+          </div>
+        </div>
+        <div class="category-card">
+          <div class="category-pill">Going out</div>
+          <h3>Evening, events, and special occasions.</h3>
+          <p>Elegant bags for going out, with luxe finishes and bold colors.</p>
+          <div class="category-actions">
+            <a class="btn btn-ghost" href="categories.html?category=Going%20out">View Going out</a>
+          </div>
+        </div>
+        <div class="category-card">
+          <div class="category-pill">Everyday</div>
+          <h3>Effortless, practical, and stylish.</h3>
+          <p>Bags for daily use, with comfort and versatility in mind.</p>
+          <div class="category-actions">
+            <a class="btn btn-ghost" href="categories.html?category=Everyday">View Everyday</a>
+          </div>
+        </div>
+        <div class="category-card">
+          <div class="category-pill">Fully Boxed</div>
+          <h3>Exclusive, boxed luxury.</h3>
+          <p>Premium bags presented fully boxed for gifting or collection.</p>
+          <div class="category-actions">
+            <a class="btn btn-ghost" href="categories.html?category=Fully%20Boxed">View Fully Boxed</a>
+          </div>
+        </div>
+        <div class="category-card">
+          <div class="category-pill">Luxury</div>
+          <h3>Premium, exclusive, and timeless.</h3>
+          <p>Finest materials, elegant finishes, and true luxury for collectors and connoisseurs.</p>
+          <div class="category-actions">
+            <a class="btn btn-ghost" href="categories.html?category=Luxury">View Luxury</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+</div>
+<nav class="side-nav">
+  <div class="nav-brand">
+    <a href="index.html" class="logo">Gloré Classique</a>
+    <div class="tagline">Curated · Affordable · Luxury</div>
+  </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html" class="active">Categories</a></li>
+      <li><a href="shop.html">Shop All</a></li>
+      <li><a href="cart.html">Edit Cart <span id="nav-cart-count" class="cart-count">0</span></a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="close-nav" type="button" aria-label="Close navigation" style="display:none">&times;</button>
+    <div class="nav-cta">
+      <a href="https://instagram.com/glore_classique" target="_blank" rel="noopener" class="pill">@glore_classique</a>
+      <a class="btn btn-primary btn-full" href="shop.html">Shop now</a>
+    </div>
+</nav>
+</div>
+
+<footer>
+  <div class="shell">
+    <a href="index.html" class="logo">Gloré Classique</a>
+    <div>Curated. Affordable. Luxury. <a href="https://instagram.com/glore_classique" target="_blank" rel="noopener">@glore_classique</a></div>
+    <div class="footer-links">
+      <a href="shop.html">Shop</a>
+      <a href="categories.html">Categories</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleNav() {
+  const nav = document.querySelector('.side-nav');
+  const hamburger = document.querySelector('.hamburger');
+  const overlay = document.querySelector('.nav-overlay');
+  const topBar = document.querySelector('.top-bar');
+  nav.classList.toggle('active');
+  hamburger.classList.toggle('active');
+  overlay.classList.toggle('active');
+  topBar.classList.toggle('nav-open');
+}
+</script>
+<script src="js/main.js"></script>
+<script src="js/products.js"></script>
+<script src="js/products.js"></script>
+<script>
+// --- Robust Cart, Nav, and Sidebar Logic ---
+if (typeof getCart !== 'function') {
+  window.getCart = function() {
+    try {
+      return JSON.parse(localStorage.getItem('cart') || '[]');
+    } catch (e) {
+      return [];
+    }
+  };
+}
+if (typeof updateCartCount !== 'function') {
+  window.updateCartCount = function() {
+    var cart = getCart();
+    var count = cart.reduce(function(sum, item) { return sum + (item.qty || 0); }, 0);
+    var els = [
+      document.getElementById('cart-count'),
+      document.getElementById('nav-cart-count')
+    ];
+    els.forEach(function(el) { if (el) el.textContent = count; });
+  };
+}
+document.addEventListener('DOMContentLoaded', function() {
+  // Always update cart count on load
+  updateCartCount();
+  // Nav and cart sidebar open/close
+  var hamburger = document.querySelector('.hamburger');
+  var navOverlay = document.querySelector('.nav-overlay');
+  var sideNav = document.querySelector('.side-nav');
+  var topBar = document.querySelector('.top-bar');
+  var closeNav = document.querySelector('.close-nav');
+  var cartBtn = document.querySelector('.cart-btn');
+  var cartSidebar = document.querySelector('.cart-sidebar');
+  var cartOverlay = document.querySelector('.cart-overlay');
+  if (hamburger) {
+    hamburger.onclick = function() {
+      sideNav.classList.toggle('active');
+      navOverlay.classList.toggle('active');
+      topBar.classList.toggle('nav-open');
+    };
+  }
+  if (navOverlay) {
+    navOverlay.onclick = function() {
+      sideNav.classList.remove('active');
+      navOverlay.classList.remove('active');
+      topBar.classList.remove('nav-open');
+    };
+  }
+  if (closeNav) {
+    closeNav.onclick = function() {
+      sideNav.classList.remove('active');
+      navOverlay.classList.remove('active');
+      topBar.classList.remove('nav-open');
+    };
+  }
+  if (cartBtn) {
+    cartBtn.onclick = function(e) {
+      e.preventDefault();
+      cartSidebar.classList.add('active');
+      cartOverlay.classList.add('active');
+    };
+  }
+  if (cartOverlay) {
+    cartOverlay.onclick = function() {
+      cartSidebar.classList.remove('active');
+      cartOverlay.classList.remove('active');
+    };
+  }
+  var closeCart = document.querySelector('.close-cart');
+  if (closeCart) {
+    closeCart.onclick = function() {
+      cartSidebar.classList.remove('active');
+      cartOverlay.classList.remove('active');
+    };
+  }
+
+  // --- In-page category view logic ---
+  const products = window.products || [];
+  const categoryList = document.getElementById('category-list');
+  const categoryView = document.getElementById('category-view');
+  function renderCategoryBags(category) {
+    if (!categoryView) return;
+    const filtered = products.filter(p => p.category === category);
+    categoryView.innerHTML = `
+      <div class="fancy-eyebrow">${category}</div>
+      <h2>${category} Bags</h2>
+      <div class="shop-grid">
+        ${filtered.length ? filtered.map(product => {
+          let selectedColor = 0;
+          let colorStock = product.colors && product.colors.length > 0 ? product.colors[0].stock : 0;
+          let soldOut = colorStock === 0;
+          let swatchHtml = "";
+          if (product.colors && product.colors.length > 0) {
+            swatchHtml = `<div class=\"color-swatches\">${product.colors.map((c, i) => `<span class=\"color-swatch\" title=\"${c.name}\" style=\"background:${c.swatch};\" data-img=\"${c.image}\" data-index=\"${i}\"></span>`).join("")}</div>`;
+          }
+          let priceHtml = `<span class=\"price\">₦${product.price.toLocaleString()}</span>`;
+          if (product.oldPrice) {
+            priceHtml = `<span class=\"old-price\">₦${product.oldPrice.toLocaleString()}</span> <span class=\"price\">₦${product.price.toLocaleString()}</span>`;
+          }
+          return `
+            <div class=\"product-card\">
+              /* Lines 192-205 omitted */
+            </div>
+          `;
+        }).join('') : '<div class="not-found">No bags found in this category.</div>'}
+      </div>
+      <button class="btn btn-ghost" onclick="showCategoryList()">Back to Categories</button>
+    `;
+    categoryView.style.display = '';
+    categoryList.style.display = 'none';
+    // Enable color swatch logic for each card
+    categoryView.querySelectorAll('.product-card').forEach((card, idx) => {
+      const product = filtered[idx];
+      let selectedColor = 0;
+      const imgEl = card.querySelector('.product-img-main');
+      const swatches = card.querySelectorAll('.color-swatch');
+      const stockEl = card.querySelector('.stock');
+      const button = card.querySelector('button');
+      if (swatches.length) {
+        swatches.forEach((swatch, i) => {
+          if (i === 0) swatch.classList.add('selected');
+          swatch.addEventListener('click', function() {
+            swatches.forEach(s => s.classList.remove('selected'));
+            swatch.classList.add('selected');
+            selectedColor = i;
+            imgEl.src = product.colors[i].image;
+            let colorStock = product.colors[i].stock;
+            stockEl.textContent = colorStock === 0 ? "Restock soon" : `${colorStock} left`;
+            if (colorStock === 0) {
+              /* Lines 232-233 omitted */
+              button.textContent = "Sold out";
+            } else {/* Lines 235-237 omitted */}
+          });
+        });
+      }
+      if (!button.disabled) {
+        button.onclick = () => {
+          let prodToCart = { ...product };
+          if (product.colors && product.colors.length) {/* Lines 245-248 omitted */}
+          if (typeof addToCart === 'function') addToCart(prodToCart);
+        };
+      }
+    });
+  }
+  window.showCategoryList = function() {
+    categoryView.style.display = 'none';
+    categoryList.style.display = '';
+  };
+  document.querySelectorAll('.category-actions a').forEach(link => {
+    link.onclick = function(e) {
+      e.preventDefault();
+      const cat = decodeURIComponent(this.href.split('category=')[1] || '').replace(/\+/g, ' ');
+      renderCategoryBags(cat);
+    };
+  });
+
+  // Show category view on page load if category param is present
+  const params = new URLSearchParams(window.location.search);
+  const initialCategory = params.get('category');
+  if (initialCategory) {
+    renderCategoryBags(initialCategory.replace(/\+/g, ' '));
+  }
+});
+</script>
+    categoryList.style.display = '';
+  };
+  document.querySelectorAll('.category-actions a').forEach(link => {
+    link.onclick = function(e) {
+      e.preventDefault();
+      const cat = decodeURIComponent(this.href.split('category=')[1] || '').replace(/\+/g, ' ');
+      renderCategoryBags(cat);
+    };
+  });
+
+  // Show category view on page load if category param is present
+  const params = new URLSearchParams(window.location.search);
+  const initialCategory = params.get('category');
+  if (initialCategory) {
+    renderCategoryBags(initialCategory.replace(/\+/g, ' '));
+  }
+});
+</script>
+
+</body>
+</html>

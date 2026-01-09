@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout | Gloré Classique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="top-bar">
+  <div class="hamburger-wrap">
+    <button class="hamburger" type="button" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="brand-header-stack">
+    <span class="brand-header-top">Gloré</span>
+    <span class="brand-header-bottom">Classique</span>
+  </div>
+  <form class="header-search" action="#" autocomplete="off" onsubmit="event.preventDefault();">
+    <input type="text" class="search-input" placeholder="Search bags, styles, moods..." aria-label="Search">
+    <button type="submit" class="search-btn" aria-label="Search">
+      <span class="search-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block">
+          <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2"/>
+          <line x1="14.2" y1="14.2" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </button>
+  </form>
+  <div style="flex:1"></div>
+  <button class="cart-btn" type="button" aria-label="View cart">
+    <span class="cart-icon-wrap" style="position:relative;display:inline-block;">
+      <span class="cart-icon">🛒</span>
+      <span id="cart-count" class="cart-count">0</span>
+    </span>
+  </button>
+</div>
+<div class="nav-overlay" tabindex="-1"></div>
+<div class="cart-overlay" tabindex="-1"></div>
+<aside class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="close-cart" type="button" aria-label="Close cart">&times;</button>
+  </div>
+  <div id="cart-items" class="cart-items"></div>
+  <div class="cart-footer">
+    <a class="btn btn-ghost" href="shop.html">Add more to cart</a>
+    <a class="btn btn-primary" href="checkout.html">Checkout</a>
+  </div>
+</aside>
+<!-- overlays already included above -->
+<nav class="side-nav">
+  <div class="nav-brand">
+    <a href="index.html" class="logo">Gloré Classique</a>
+    <div class="tagline">Curated · Affordable · Luxury</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="categories.html">Categories</a></li>
+    <li><a href="shop.html">Shop All</a></li>
+    <li><a href="cart.html">Edit Cart <span id="nav-cart-count" class="cart-count">0</span></a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="https://instagram.com/glore_classique" target="_blank" rel="noopener" class="pill">@glore_classique</a>
+    <a class="btn btn-primary btn-full" href="shop.html">Shop now</a>
+  </div>
+</nav>
+<div class="page">
+  <div class="content">
+    <main>
+      <section>
+        <div class="shell">
+          <div class="fancy-eyebrow">Checkout</div>
+          <h2>Complete your order</h2>
+          <div class="checkout-shell">
+            <form id="checkout-form" class="checkout-form modern-checkout-form">
+              <h3 class="checkout-title">Shipping Details</h3>
+              <div class="checkout-fields">
+                <div class="form-group"><label for="name">Full Name</label><input type="text" id="name" name="name" required></div>
+                <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" required></div>
+                <div class="form-group"><label for="phone">Phone Number</label><input type="tel" id="phone" name="phone" required></div>
+                <div class="form-group"><label for="address">Delivery Address</label><input type="text" id="address" name="address" required></div>
+                <div class="form-group"><label for="city">City</label><input type="text" id="city" name="city" required></div>
+                <div class="form-group"><label for="state">State/Region</label>
+                  <select id="state" name="state" required autocomplete="address-level1">
+                    <option value="">Select state/region</option>
+                    <option value="Abuja">Abuja</option>
+                    <option value="Lagos">Lagos</option>
+                    <option value="Port Harcourt">Port Harcourt</option>
+                    <option value="Kano">Kano</option>
+                    <option value="Enugu">Enugu</option>
+                    <option value="Kaduna">Kaduna</option>
+                    <option value="Jos">Jos</option>
+                    <option value="Benin">Benin</option>
+                    <option value="Ibadan">Ibadan</option>
+                    <option value="Onitsha">Onitsha</option>
+                    <option value="Maiduguri">Maiduguri</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="form-group full-width"><label for="instructions">Delivery Instructions <span style="color:#aaa;font-weight:400;">(optional)</span></label><textarea id="instructions" name="instructions" rows="2"></textarea></div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-full checkout-pay-btn">Pay Now</button>
+            </form>
+            <aside id="checkout-summary" class="checkout-summary"></aside>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<footer>
+  <div class="shell">
+    <a href="index.html" class="logo">Gloré Classique</a>
+    <div>Curated. Affordable. Luxury. <a href="https://instagram.com/glore_classique" target="_blank" rel="noopener">@glore_classique</a></div>
+    <div class="footer-links">
+      <a href="shop.html">Shop</a>
+      <a href="categories.html">Categories</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+<script>
+// --- Robust Cart, Nav, and Checkout Submission Logic ---
+// Fallbacks for cart logic if main.js fails
+if (typeof getCart !== 'function') {
+  window.getCart = function() {
+    try {
+      return JSON.parse(localStorage.getItem('cart') || '[]');
+    } catch (e) {
+      return [];
+    }
+  };
+}
+if (typeof updateCartCount !== 'function') {
+  window.updateCartCount = function() {
+    var cart = getCart();
+    var count = cart.reduce(function(sum, item) { return sum + (item.qty || 0); }, 0);
+    var els = [
+      document.getElementById('cart-count'),
+      document.getElementById('nav-cart-count')
+    ];
+    els.forEach(function(el) { if (el) el.textContent = count; });
+  };
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Always update cart count on load
+  updateCartCount();
+
+  // Nav and cart sidebar open/close
+  var hamburger = document.querySelector('.hamburger');
+  var navOverlay = document.querySelector('.nav-overlay');
+  var cartBtn = document.querySelector('.cart-btn');
+  var cartOverlay = document.querySelector('.cart-overlay');
+  var closeCart = document.querySelector('.close-cart');
+  var sideNav = document.querySelector('nav.side-nav');
+  var topBar = document.querySelector('.top-bar');
+  var cartSidebar = document.querySelector('.cart-sidebar');
+  if (hamburger) {
+    hamburger.onclick = function() {
+      sideNav.classList.toggle('active');
+      navOverlay.classList.toggle('active');
+      topBar.classList.toggle('nav-open');
+    };
+  }
+  if (navOverlay) {
+    navOverlay.onclick = function() {
+      sideNav.classList.remove('active');
+      navOverlay.classList.remove('active');
+      topBar.classList.remove('nav-open');
+    };
+  }
+  if (cartBtn) {
+    cartBtn.onclick = function() {
+      cartSidebar.classList.add('active');
+      cartOverlay.classList.add('active');
+    };
+  }
+  if (cartOverlay) {
+    cartOverlay.onclick = function() {
+      cartSidebar.classList.remove('active');
+      cartOverlay.classList.remove('active');
+    };
+  }
+  if (closeCart) {
+    closeCart.onclick = function() {
+      cartSidebar.classList.remove('active');
+      cartOverlay.classList.remove('active');
+    };
+  }
+
+  // Checkout form submission via Resend API
+  var checkoutForm = document.getElementById('checkout-form');
+  if (checkoutForm) {
+    checkoutForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      var form = e.target;
+      var data = {
+        name: form.name.value,
+        email: form.email.value,
+        phone: form.phone.value,
+        address: form.address.value,
+        city: form.city.value,
+        state: form.state.value,
+        instructions: form.instructions.value,
+        cart: (typeof getCart === 'function' ? getCart() : []),
+        summary: document.getElementById('checkout-summary') ? document.getElementById('checkout-summary').innerHTML : ''
+      };
+      var btn = form.querySelector('button[type="submit"]');
+      var origBtn = btn ? btn.textContent : '';
+      if (btn) btn.textContent = 'Sending...';
+      try {
+        var res = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (res.ok) {
+          form.reset();
+          if (btn) btn.textContent = 'Order Sent!';
+          setTimeout(function(){ if(btn) btn.textContent = origBtn; }, 2000);
+          window.location.href = 'payment.html';
+        } else {
+          if (btn) btn.textContent = origBtn;
+          alert('Failed to send order. Please try again.');
+        }
+      } catch (err) {
+        if (btn) btn.textContent = origBtn;
+        alert('Network error. Please try again.');
+      }
+    });
+  }
+});
+// --- Delivery Fee Logic ---
+const DELIVERY_FEES = [
+  { match: /abuja/i, fee: 3000 },
+  { match: /lagos/i, fee: 5000 },
+  { match: /port\s*harcourt|phc/i, fee: 6000 },
+  { match: /kano/i, fee: 4500 },
+  { match: /enugu/i, fee: 5500 },
+  { match: /kaduna/i, fee: 3000 },
+  { match: /jos/i, fee: 3000 },
+  { match: /benin/i, fee: 5500 },
+  { match: /ibadan/i, fee: 5000 },
+  { match: /onitsha/i, fee: 5500 },
+  { match: /maiduguri/i, fee: 7000 },
+];
+const DEFAULT_DELIVERY_FEE = 6000;
+
+function getDeliveryFee(state) {
+  if (!state) return 0;
+  for (const entry of DELIVERY_FEES) {
+    if (entry.match.test(state)) return entry.fee;
+  }
+  return DEFAULT_DELIVERY_FEE;
+}
+
+function renderCheckoutSummary() {
+  const summary = document.getElementById('checkout-summary');
+  if (!summary) return;
+  if (typeof getCart !== 'function') {
+    summary.innerHTML = '<div class="empty-summary">Cart unavailable. Please reload.</div>';
+    return;
+  }
+  let cart = getCart();
+  if (!cart || !cart.length) {
+    summary.innerHTML = '<div class="empty-summary">Your cart is empty.</div>';
+    return;
+  }
+  let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  // Get state input value
+  const stateInput = document.getElementById('state');
+  const stateVal = stateInput ? stateInput.value.trim() : '';
+  const deliveryFee = getDeliveryFee(stateVal);
+  summary.innerHTML = `
+    <h3 class="summary-title">Order Summary</h3>
+    <ul class="summary-list">
+      ${cart.map(item => `
+        <li class="summary-item">
+          <span class="summary-thumb-wrap">
+            <img src="${item.image}" alt="${item.name}" class="summary-thumb">
+          </span>
+          <span class="summary-info">
+            <span class="summary-name">${item.name}${item.colorName ? ` <span class='summary-color'>(${item.colorName})</span>` : ''}</span>
+            <span class="summary-qty">× ${item.qty}</span>
+            <span class="summary-prices">
+              ${item.oldPrice ? `<span class='old-price'>₦${item.oldPrice.toLocaleString()}</span>` : ''}
+              <span class="price">₦${item.price.toLocaleString()}</span>
+            </span>
+          </span>
+        </li>
+      `).join('')}
+    </ul>
+    <div class="summary-fee"><span>Delivery Fee</span><span>₦${deliveryFee.toLocaleString()}</span></div>
+    <div class="summary-total"><span>Total</span><span>₦${(total + deliveryFee).toLocaleString()}</span></div>
+  `;
+}
+
+// Initial render
+document.addEventListener('DOMContentLoaded', function() {
+  renderCheckoutSummary();
+  // Update summary when state changes
+  const stateInput = document.getElementById('state');
+  if (stateInput) {
+    stateInput.addEventListener('input', renderCheckoutSummary);
+  }
+  // Update summary when cart changes (listen for storage events)
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'cart') renderCheckoutSummary();
+  });
+});
+</script>
+</body>
+</html>

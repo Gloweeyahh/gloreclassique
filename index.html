@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gloré Classique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="top-bar">
+  <div class="hamburger-wrap">
+    <button class="hamburger" type="button" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="brand-header-stack">
+    <span class="brand-header-top">Gloré</span>
+    <span class="brand-header-bottom">Classique</span>
+  </div>
+  <form class="header-search" action="#" autocomplete="off" onsubmit="event.preventDefault();">
+    <input type="text" class="search-input" placeholder="Search bags, styles, moods..." aria-label="Search">
+    <button type="submit" class="search-btn" aria-label="Search">
+      <span class="search-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block">
+          <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2"/>
+          <line x1="14.2" y1="14.2" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </button>
+  </form>
+  <div style="flex:1"></div>
+  <button class="cart-btn" type="button" aria-label="View cart">
+    <span class="cart-icon-wrap" style="position:relative;display:inline-block;">
+      <span class="cart-icon">🛒</span>
+      <span id="cart-count" class="cart-count">0</span>
+    </span>
+  </button>
+</div>
+<div class="nav-overlay"></div>
+<div class="cart-overlay" tabindex="-1"></div>
+<aside class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="close-cart" type="button" aria-label="Close cart">&times;</button>
+  </div>
+  <div id="cart-items" class="cart-items"></div>
+  <div class="cart-footer">
+    <a class="btn btn-ghost" href="shop.html">Add more to cart</a>
+    <a class="btn btn-primary" href="checkout.html">Checkout</a>
+  </div>
+</aside>
+<div class="page">
+<div class="content">
+  <header class="hero">
+    <div class="shell hero-grid">
+      <div>
+        <div class="eyebrow">Curated · Affordable · Luxury</div>
+        <h1>Soft luxury bags designed to feel personal.</h1>
+        <p>Luxury is an experience not an item. Every silhouette is intentionally chosen to bring ease, elegance, and quiet confidence, the experience you deserve.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="shop.html">Explore collection</a>
+          <a class="btn btn-ghost" href="categories.html">Browse by mood</a>
+        </div>
+        <div class="hero-badges">
+          <a class="badge" href="checkout.html">Same-day Abuja delivery</a>
+          <a class="badge" href="checkout.html">Paystack secure checkout</a>
+          <a class="badge" href="categories.html">Limited curated drops</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-mark" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+          <img src="images/logo-glore-classique.jpeg" alt="Gloré Classique Logo" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="shell">
+      <h2>Featured curation</h2>
+      <p class="section-lead">Signature picks that echo the Gloré palette — cocoa lines, blush finishes, and sculpted silhouettes.</p>
+      <div id="shop" class="shop-grid" data-limit="3"></div>
+    </div>
+  </section>
+
+  <!-- View All Products Section -->
+  <section>
+    <div class="shell">
+      <h2>View All Products</h2>
+      <p class="section-lead">See the full Gloré Classique collection and discover your next favorite piece.</p>
+      <div id="all-products" class="shop-grid" data-limit="all"></div>
+      <div style="text-align:center; margin-top: 1.5em;">
+        <a class="btn btn-primary" href="shop.html">View All Products</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="shell card-grid">
+      <div class="category-card">
+        <div class="category-pill">Everyday Ease</div>
+        <h3>Soft structure for daily moments.</h3>
+        <p>Carry the essentials with refined calm: totes and shoulder bags with gentle drape and hidden organization.</p>
+        <div class="category-actions">
+          <a class="btn btn-ghost" href="categories.html?category=Everyday">Shop Everyday</a>
+          <span class="pill">02 picks</span>
+        </div>
+      </div>
+      <div class="category-card">
+        <div class="category-pill">Evening Out</div>
+        <h3>Statement light enough to dance.</h3>
+        <p>Clutches and mini silhouettes with metallic whispers and warm rose accents for after-dark plans.</p>
+        <div class="category-actions">
+          <a class="btn btn-ghost" href="categories.html?category=Going%20out">Shop Going Out</a>
+          <span class="pill">03 picks</span>
+        </div>
+      </div>
+      <div class="category-card">
+        <div class="category-pill">Bold Statements</div>
+        <h3>Artful textures. Confident shapes.</h3>
+        <p>Limited pieces that lead the room — sculpted handles, layered grains, and monogram-worthy bodies.</p>
+        <div class="category-actions">
+          <a class="btn btn-ghost" href="categories.html?category=Statement">Shop Statement</a>
+          <span class="pill">04 picks</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<nav class="side-nav">
+  <div class="nav-brand">
+    <a href="index.html" class="logo">Gloré Classique</a>
+    <div class="tagline">Curated · Affordable · Luxury</div>
+  </div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="shop.html">Shop All</a></li>
+      <li><a href="cart.html">Edit Cart <span id="nav-cart-count" class="cart-count">0</span></a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="close-nav" type="button" aria-label="Close navigation" style="display:none">&times;</button>
+    <div class="nav-cta">
+      <a href="https://instagram.com/glore_classique" target="_blank" rel="noopener" class="pill">@glore_classique</a>
+      <a class="btn btn-primary btn-full" href="shop.html">Shop now</a>
+    </div>
+</nav>
+</div>
+
+<footer>
+  <div class="shell">
+    <a href="index.html" class="logo">Gloré Classique</a>
+    <div>Curated. Affordable. Luxury. <a href="https://instagram.com/glore_classique" target="_blank" rel="noopener">@glore_classique</a></div>
+    <div class="footer-links">
+      <a href="shop.html">Shop</a>
+      <a href="categories.html">Categories</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/main.js"></script>
+<script>
+// --- Robust Cart, Nav, and Sidebar Logic ---
+if (typeof getCart !== 'function') {
+  window.getCart = function() {
+    try {
+      return JSON.parse(localStorage.getItem('cart') || '[]');
+    } catch (e) {
+      return [];
+    }
+  };
+}
+if (typeof updateCartCount !== 'function') {
+  window.updateCartCount = function() {
+    var cart = getCart();
+    var count = cart.reduce(function(sum, item) { return sum + (item.qty || 0); }, 0);
+    var els = [
+      document.getElementById('cart-count'),
+      document.getElementById('nav-cart-count')
+    ];
+    els.forEach(function(el) { if (el) el.textContent = count; });
+  };
+}
+document.addEventListener('DOMContentLoaded', function() {
+  // Always update cart count on load
+  updateCartCount();
+  // Nav and cart sidebar open/close
+  var hamburger = document.querySelector('.hamburger');
+  var navOverlay = document.querySelector('.nav-overlay');
+  var sideNav = document.querySelector('.side-nav');
+  var topBar = document.querySelector('.top-bar');
+  var closeNav = document.querySelector('.close-nav');
+  var cartBtn = document.querySelector('.cart-btn');
+  var cartSidebar = document.querySelector('.cart-sidebar');
+  var cartOverlay = document.querySelector('.cart-overlay');
+  if (hamburger) {
+    hamburger.onclick = function() {
+      sideNav.classList.toggle('active');
+      navOverlay.classList.toggle('active');
+      topBar.classList.toggle('nav-open');
+    };
+  }
+  if (navOverlay) {
+    navOverlay.onclick = function() {
+      sideNav.classList.remove('active');
+      navOverlay.classList.remove('active');
+      topBar.classList.remove('nav-open');
+    };
+  }
+  if (closeNav) {
+    closeNav.onclick = function() {
+      sideNav.classList.remove('active');
+      navOverlay.classList.remove('active');
+      topBar.classList.remove('nav-open');
+    };
+  }
+  if (cartBtn) {
+    cartBtn.onclick = function(e) {
+      e.preventDefault();
+      cartSidebar.classList.add('active');
+      cartOverlay.classList.add('active');
+    };
+  }
+  if (cartOverlay) {
+    cartOverlay.onclick = function() {
+      cartSidebar.classList.remove('active');
+      cartOverlay.classList.remove('active');
+    };
+  }
+  var closeCart = document.querySelector('.close-cart');
+  if (closeCart) {
+    closeCart.onclick = function() {
+      cartSidebar.classList.remove('active');
+      cartOverlay.classList.remove('active');
+    };
+  }
+});
+</script>
+</body>
+</html>

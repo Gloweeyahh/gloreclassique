@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact | Gloré Classique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="top-bar">
+  <div class="hamburger-wrap">
+    <button class="hamburger" onclick="toggleNav()" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="brand-header-stack">
+    <span class="brand-header-top">Gloré</span>
+    <span class="brand-header-bottom">Classique</span>
+  </div>
+  <div style="flex:1"></div>
+  <button class="cart-btn" onclick="toggleCart()" aria-label="View cart">
+    <span class="cart-icon-wrap" style="position:relative;display:inline-block;">
+      <span class="cart-icon">🛒</span>
+      <span id="cart-count" class="cart-count">0</span>
+    </span>
+  </button>
+<script>
+  document.querySelector('.cart-btn').onclick = function(e) {
+    e.preventDefault();
+    if (typeof toggleCart === 'function') toggleCart();
+  };
+</script>
+</div>
+<div class="nav-overlay"></div>
+<div class="cart-overlay" onclick="toggleCart()"></div>
+<aside class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="close-cart" onclick="toggleCart()">&times;</button>
+  </div>
+  <div id="cart-items" class="cart-items"></div>
+  <div class="cart-footer">
+    <button class="btn btn-ghost" onclick="continueShopping()">Add more to cart</button>
+    <a class="btn btn-primary" href="checkout.html">Checkout</a>
+  </div>
+</aside>
+<div class="page">
+<div class="content">
+<main>
+  <section>
+    <div class="shell contact-grid">
+      <div class="contact-card">
+        <div class="eyebrow fancy-eyebrow">We would love to hear from you</div>
+        <h2>Contact us</h2>
+        <p>Ask about a bag, request styling advice, or confirm delivery windows. We reply within one business day.</p>
+        <p><strong>Email:</strong> <a href="mailto:gloreclassique@gmail.com">gloreclassique@gmail.com</a></p>
+        <p><strong>Instagram:</strong> <a href="https://instagram.com/glore_classique" target="_blank" rel="noopener">@glore_classique</a></p>
+        <p><strong>Phone:</strong> <a href="tel:+2347036630817">0703 663 0817</a></p>
+        <p><strong>WhatsApp:</strong> <a href="https://wa.me/2347036630817" target="_blank" rel="noopener">Chat with us</a></p>
+      </div>
+      <div class="contact-card">
+        <form class="contact-form" action="https://formsubmit.co/gloreclassique@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="New Contact Form Submission - Gloré Classique">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_template" value="box">
+          <input type="text" name="name" placeholder="Your Name" required>
+          <input type="email" name="email" placeholder="Your Email" required>
+          <textarea name="message" placeholder="Your Message" required></textarea>
+          <button type="submit" class="btn btn-primary btn-full">Send message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+</div>
+<nav class="side-nav">
+  <div class="nav-brand">
+    <a href="index.html" class="logo">Gloré Classique</a>
+    <div class="tagline">Curated · Affordable · Luxury</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="categories.html">Categories</a></li>
+    <li><a href="shop.html">Shop All</a></li>
+    <li><a href="cart.html">Edit Cart <span id="nav-cart-count" class="cart-count">0</span></a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="https://instagram.com/glore_classique" target="_blank" rel="noopener" class="pill">@glore_classique</a>
+    <a class="btn btn-primary btn-full" href="shop.html">Shop now</a>
+  </div>
+</nav>
+</div>
+
+<footer>
+  <div class="shell">
+    <a href="index.html" class="logo">Gloré Classique</a>
+    <div>Curated. Affordable. Luxury. <a href="https://instagram.com/glore_classique" target="_blank" rel="noopener">@glore_classique</a></div>
+    <div class="footer-links">
+      <a href="shop.html">Shop</a>
+      <a href="categories.html">Categories</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleNav() {
+  const nav = document.querySelector('.side-nav');
+  const hamburger = document.querySelector('.hamburger');
+  const overlay = document.querySelector('.nav-overlay');
+  const topBar = document.querySelector('.top-bar');
+  nav.classList.toggle('active');
+  hamburger.classList.toggle('active');
+  overlay.classList.toggle('active');
+  topBar.classList.toggle('nav-open');
+}
+</script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

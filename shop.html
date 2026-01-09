@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shop All | Gloré Classique</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="top-bar">
+  <div class="hamburger-wrap">
+    <button class="hamburger" type="button" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="brand-header-stack">
+    <span class="brand-header-top">Gloré</span>
+    <span class="brand-header-bottom">Classique</span>
+  </div>
+  <div style="flex:1"></div>
+  <button class="cart-btn" type="button" aria-label="View cart">
+    <span class="cart-icon-wrap" style="position:relative;display:inline-block;">
+      <span class="cart-icon">🛒</span>
+      <span id="cart-count" class="cart-count">0</span>
+    </span>
+  </button>
+</div>
+<div class="nav-overlay" tabindex="-1"></div>
+<div class="cart-overlay" tabindex="-1"></div>
+<div class="nav-overlay"></div>
+<div class="cart-overlay" onclick="toggleCart()"></div>
+<aside class="cart-sidebar">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="close-cart" type="button" aria-label="Close cart">&times;</button>
+  </div>
+  <div id="cart-items" class="cart-items"></div>
+  <div class="cart-footer">
+    <a class="btn btn-ghost" href="shop.html">Add more to cart</a>
+    <a class="btn btn-primary" href="checkout.html">Checkout</a>
+  </div>
+</aside>
+<div class="page">
+<div class="content">
+<main>
+  <section>
+    <div class="shell">
+      <div class="eyebrow fancy-eyebrow">The full drop</div>
+      <h2>All bags</h2>
+      <p class="section-lead">The full collection.</p>
+      <div id="shop" class="shop-grid" data-limit="all"></div>
+          <div class="shop-grid" style="margin-top:2em;">
+            <div class="product-card placeholder">
+              <div class="product-media"><div class="placeholder-img"></div></div>
+              <h3>Product Name</h3>
+              <div class="product-meta">
+                <span class="price">₦0</span>
+                <span class="stock">0 left</span>
+              </div>
+              <div class="product-actions">
+                <button class="btn btn-primary btn-full" disabled>Coming Soon</button>
+              </div>
+            </div>
+            <div class="product-card placeholder">
+              <div class="product-media"><div class="placeholder-img"></div></div>
+              <h3>Product Name</h3>
+              <div class="product-meta">
+                <span class="price">₦0</span>
+                <span class="stock">0 left</span>
+              </div>
+              <div class="product-actions">
+                <button class="btn btn-primary btn-full" disabled>Coming Soon</button>
+              </div>
+            </div>
+            <div class="product-card placeholder">
+              <div class="product-media"><div class="placeholder-img"></div></div>
+              <h3>Product Name</h3>
+              <div class="product-meta">
+                <span class="price">₦0</span>
+                <span class="stock">0 left</span>
+              </div>
+              <div class="product-actions">
+                <button class="btn btn-primary btn-full" disabled>Coming Soon</button>
+              </div>
+            </div>
+          </div>
+    </div>
+  </section>
+</main>
+</div>
+<nav class="side-nav">
+  <div class="nav-brand">
+    <a href="index.html" class="logo">Gloré Classique</a>
+    <div class="tagline">Curated · Affordable · Luxury</div>
+  </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="shop.html" class="active">Shop All</a></li>
+      <li><a href="cart.html">Edit Cart <span id="nav-cart-count" class="cart-count">0</span></a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="close-nav" type="button" aria-label="Close navigation" style="display:none">&times;</button>
+    <div class="nav-cta">
+      <a href="https://instagram.com/glore_classique" target="_blank" rel="noopener" class="pill">@glore_classique</a>
+      <a class="btn btn-primary btn-full" href="shop.html">Shop now</a>
+    </div>
+</nav>
+</div>
+
+<footer>
+  <div class="shell">
+    <a href="index.html" class="logo">Gloré Classique</a>
+    <div>Curated. Affordable. Luxury. <a href="https://instagram.com/glore_classique" target="_blank" rel="noopener">@glore_classique</a></div>
+    <div class="footer-links">
+      <a href="shop.html">Shop</a>
+      <a href="categories.html">Categories</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/main.js"></script>
+<script>
+// --- Robust Cart, Nav, and Sidebar Logic ---
+if (typeof getCart !== 'function') {
+  window.getCart = function() {
+    try {
+      return JSON.parse(localStorage.getItem('cart') || '[]');
+    } catch (e) {
+      return [];
+    }
+  };
+}
+if (typeof updateCartCount !== 'function') {
+  window.updateCartCount = function() {
+    var cart = getCart();
+    var count = cart.reduce(function(sum, item) { return sum + (item.qty || 0); }, 0);
+    var els = [
+      document.getElementById('cart-count'),
+      document.getElementById('nav-cart-count')
+    ];
+    els.forEach(function(el) { if (el) el.textContent = count; });
+  };
+}
+document.addEventListener('DOMContentLoaded', function() {
+  // Always update cart count on load
+  updateCartCount();
+  // Nav and cart sidebar open/close
+  var hamburger = document.querySelector('.hamburger');
+  var navOverlay = document.querySelector('.nav-overlay');
+  var sideNav = document.querySelector('.side-nav');
+  var topBar = document.querySelector('.top-bar');
+  var closeNav = document.querySelector('.close-nav');
+  var cartBtn = document.querySelector('.cart-btn');
+  var cartSidebar = document.querySelector('.cart-sidebar');
+  var cartOverlay = document.querySelector('.cart-overlay');
+  if (hamburger) {
+    hamburger.onclick = function() {
+      sideNav.classList.toggle('active');
+      navOverlay.classList.toggle('active');
+      topBar.classList.toggle('nav-open');
+    };
+  }
+  if (navOverlay) {
+    navOverlay.onclick = function() {
+      sideNav.classList.remove('active');
+      navOverlay.classList.remove('active');
+      topBar.classList.remove('nav-open');
+    };
+  }
+  if (closeNav) {
+    closeNav.onclick = function() {
+      sideNav.classList.remove('active');
+      navOverlay.classList.remove('active');
+      topBar.classList.remove('nav-open');
+    };
+  }
+  if (cartBtn) {
+    cartBtn.onclick = function(e) {
+      e.preventDefault();
+      cartSidebar.classList.add('active');
+      cartOverlay.classList.add('active');
+    };
+  }
+  if (cartOverlay) {
+    cartOverlay.onclick = function() {
+      cartSidebar.classList.remove('active');
+      cartOverlay.classList.remove('active');
+    };
+  }
+  var closeCart = document.querySelector('.close-cart');
+  if (closeCart) {
+    closeCart.onclick = function() {
+      cartSidebar.classList.remove('active');
+      cartOverlay.classList.remove('active');
+    };
+  }
+});
+</script>
+</body>
+</html>
