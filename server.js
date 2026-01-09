@@ -25,7 +25,7 @@ app.post('/api/send-email', async (req, res) => {
   try {
     await resend.emails.send({
       from: 'Glore Classique <noreply@gloreclassique.com>',
-      to: RECIPIENT_EMAIL, // <-- YOUR EMAIL
+      to: glowemeka@gmail.com, // <-- YOUR EMAIL
       subject: 'New Order from Glore Classique',
       html: `<h2>New Order</h2>
         <p><b>Name:</b> ${data.name}</p>
@@ -45,17 +45,18 @@ app.post('/api/send-email', async (req, res) => {
 
 // --- Email proof of payment (with file upload) ---
 const upload = multer({ dest: 'uploads/' });
-app.post('/api/send-proof', upload.single('proof'), async (req, res) => {
-  const { name, email } = req.body;
+app.post('/api/send-proof', upload.single('proofFile'), async (req, res) => {
+  const { payerName, payerEmail, orderInfo } = req.body;
   const file = req.file;
   try {
     await resend.emails.send({
       from: 'Glore Classique <noreply@gloreclassique.com>',
-      to: RECIPIENT_EMAIL, // <-- YOUR EMAIL
+      to: glowemeka@gmail.com, // <-- YOUR EMAIL
       subject: 'Proof of Payment Upload',
       html: `<h2>Proof of Payment</h2>
-        <p><b>Name:</b> ${name}</p>
-        <p><b>Email:</b> ${email}</p>
+        <p><b>Name:</b> ${payerName}</p>
+        <p><b>Email:</b> ${payerEmail}</p>
+        <p><b>Order Info:</b> ${orderInfo || ''}</p>
         <p>See attached proof of payment.</p>`,
       attachments: file ? [{
         filename: file.originalname,
