@@ -57,7 +57,7 @@ window.products = [
     price: 18500,
     oldPrice: 23000,
     colors: [
-      { name: "Beige", image: "images/sbb.jpeg", swatch: "#dbdbdbff", stock: 3 },
+      { name: "Beige", image: "images/sbb4.jpeg", swatch: "#dbdbdbff", stock: 3 },
       { name: "Black", image: "images/sbb3.jpeg", swatch: "#000000ff", stock: 1 },
       { name: "Brown", image: "images/sbb2.jpeg", swatch: "#534747ff", stock: 0},
       { name: "Pink", image: "images/sbb5.jpeg", swatch: "#c72c89ff", stock: 0}
@@ -263,4 +263,5 @@ window.products = [
     image: "images/cbb5.jpeg",
     category: "Luxury"
   }
+
 ];
