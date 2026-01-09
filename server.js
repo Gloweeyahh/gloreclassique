@@ -1,3 +1,21 @@
+// --- Contact form email ---
+app.post('/api/send-contact', async (req, res) => {
+  const { name, email, message } = req.body;
+  try {
+    await resend.emails.send({
+      from: 'Glore Classique <noreply@gloreclassique.com>',
+      to: glowemeka@gmail.com,
+      subject: 'New Contact Form Submission',
+      html: `<h2>Contact Form Submission</h2>
+        <p><b>Name:</b> ${name}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Message:</b><br>${message.replace(/\n/g, '<br>')}</p>`
+    });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 // server.js - Express backend to receive all form submissions and subscriptions
 
 const express = require('express');
