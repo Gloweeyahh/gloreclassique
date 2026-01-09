@@ -131,7 +131,10 @@ document.getElementById('proof-form').addEventListener('submit', async function(
       status.textContent = 'Proof sent! We will confirm your payment soon.';
       status.style.color = 'green';
       if (btn) btn.textContent = 'Sent!';
-      setTimeout(function(){ if(btn) btn.textContent = origBtn; }, 2000);
+      setTimeout(function(){
+        if(btn) btn.textContent = origBtn;
+        window.location.href = 'index.html';
+      }, 2000);
     } else {
       status.textContent = 'Failed to send proof. Please try again.';
       status.style.color = 'red';
