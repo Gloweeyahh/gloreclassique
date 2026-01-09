@@ -127,9 +127,9 @@
 </footer>
 <script src="js/main.js"></script>
 <script>
-// --- Checkout Submission ---
+// --- Checkout Submission with Cart & Stock Update ---
 document.addEventListener('DOMContentLoaded', function() {
-  updateCartCount();
+  if (typeof updateCartCount === 'function') updateCartCount();
 
   var checkoutForm = document.getElementById('checkout-form');
   if (checkoutForm) {
@@ -137,14 +137,23 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
       var form = e.target;
 
-      // --- PATCH: Get only valid cart items ---
+      // --- PATCH: Only valid cart items ---
       var cartArr = (typeof getCart === 'function' ? getCart() : []).filter(item => item.qty > 0);
+      if (!cartArr.length) {
+        alert('Your cart is empty.');
+        return;
+      }
 
-      var summaryText = cartArr.length ? cartArr.map(function(item, idx) {
+      // --- PATCH: Update stock & clear cart ---
+      if (typeof checkoutCart === 'function') checkoutCart();
+
+      // --- Prepare email summary ---
+      var summaryText = cartArr.map(function(item, idx) {
         return (
-          (idx+1) + '. ' + item.name + (item.colorName ? ' (' + item.colorName + ')' : '') + ' x' + item.qty + ' - ₦' + item.price.toLocaleString()
+          (idx+1) + '. ' + item.name + (item.colorName ? ' (' + item.colorName + ')' : '') + 
+          ' x' + item.qty + ' - ₦' + item.price.toLocaleString()
         );
-      }).join('\n') : 'No items in cart.';
+      }).join('\n');
 
       var data = {
         name: form.name.value,
@@ -171,8 +180,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (res.ok) {
           form.reset();
+
+          // --- PATCH: Update cart and summary immediately ---
+          if (typeof renderCheckoutSummary === 'function') renderCheckoutSummary();
+          if (typeof updateCartCount === 'function') updateCartCount();
+
           if (btn) btn.textContent = 'Order Sent!';
           setTimeout(() => { if(btn) btn.textContent = origBtn; }, 2000);
+
+          // Redirect to payment page
           window.location.href = 'payment.html';
         } else {
           if (btn) btn.textContent = origBtn;
@@ -184,9 +200,18 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+
+  // Render summary on page load
+  if (typeof renderCheckoutSummary === 'function') renderCheckoutSummary();
+
+  // Listen for cart changes in other tabs
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'cart') {
+      if (typeof renderCheckoutSummary === 'function') renderCheckoutSummary();
+      if (typeof updateCartCount === 'function') updateCartCount();
+    }
+  });
 });
 </script>
-
 </body>
 </html>
-
