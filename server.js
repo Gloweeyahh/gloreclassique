@@ -29,7 +29,7 @@ app.post('/api/send-contact', async (req, res) => {
 
   try {
     await resend.emails.send({
-      from: 'Glore Classique <noreply@gloreclassique.com>',
+      from: 'Glore Classique <onboarding@resend.dev>',
       to: RECIPIENT_EMAIL,
       subject: 'New Contact Form Submission',
       html: `
@@ -53,7 +53,7 @@ app.post('/api/send-email', async (req, res) => {
 
   try {
     await resend.emails.send({
-      from: 'Glore Classique <noreply@gloreclassique.com>',
+      from: 'Glore Classique <onboarding@resend.dev>',
       to: RECIPIENT_EMAIL,
       subject: 'New Order from Glore Classique',
       html: `
@@ -85,7 +85,7 @@ app.post('/api/send-proof', upload.single('proofFile'), async (req, res) => {
 
   try {
     await resend.emails.send({
-      from: 'Glore Classique <noreply@gloreclassique.com>',
+      from: 'Glore Classique <onboarding@resend.dev>',
       to: RECIPIENT_EMAIL,
       subject: 'Proof of Payment Upload',
       html: `
@@ -112,3 +112,4 @@ app.post('/api/send-proof', upload.single('proofFile'), async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
