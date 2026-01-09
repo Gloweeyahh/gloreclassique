@@ -246,22 +246,38 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="fancy-eyebrow">${category}</div>
       <h2>${category} Bags</h2>
       <div class="shop-grid">
-        ${filtered.length ? filtered.map(product => {
+        ${filtered.length ? filtered.map((product, idx) => {
+          let sortedColors = [];
+          if (product.colors && product.colors.length > 0) {
+            sortedColors = [...product.colors].sort((a, b) => (a.stock === 0) - (b.stock === 0));
+          }
           let selectedColor = 0;
-          let colorStock = product.colors && product.colors.length > 0 ? product.colors[0].stock : 0;
+          let colorStock = sortedColors.length > 0 ? sortedColors[0].stock : 0;
           let soldOut = colorStock === 0;
           let swatchHtml = "";
-          if (product.colors && product.colors.length > 0) {
-            swatchHtml = `<div class=\"color-swatches\">${product.colors.map((c, i) => `<span class=\"color-swatch\" title=\"${c.name}\" style=\"background:${c.swatch};\" data-img=\"${c.image}\" data-index=\"${i}\"></span>`).join("")}</div>`;
+          if (sortedColors.length > 0) {
+            swatchHtml = `<div class=\"color-swatches\">${sortedColors.map((c, i) => `<span class=\"color-swatch\" title=\"${c.name}\" style=\"background:${c.swatch};\" data-img=\"${c.image}\" data-index=\"${i}\"></span>`).join("")}</div>`;
           }
           let priceHtml = `<span class=\"price\">₦${product.price.toLocaleString()}</span>`;
           if (product.oldPrice) {
             priceHtml = `<span class=\"old-price\">₦${product.oldPrice.toLocaleString()}</span> <span class=\"price\">₦${product.price.toLocaleString()}</span>`;
           }
           return `
-            <div class=\"product-card\">
-              /* Lines 192-205 omitted */
-            </div>
+            <div class=\"product-card\">\n\
+              <div class=\"product-media\">\n\
+                <span class=\"ribbon\" style=\"display:${soldOut ? 'inline-block' : 'none'}\">Sold Out</span>\n\
+                <img src=\"${sortedColors.length > 0 ? sortedColors[0].image : product.image}\" alt=\"${product.name}\" class=\"product-img-main\">\n\
+                ${swatchHtml}\n\
+              </div>\n\
+              <h3>${product.name}</h3>\n\
+              <div class=\"product-meta\">\n\
+                ${priceHtml}\n\
+                <span class=\"stock\">${soldOut ? "Restock soon" : `${colorStock} left`}</span>\n\
+              </div>\n\
+              <div class=\"product-actions\">\n\
+                <button class=\"btn btn-primary btn-full\" ${soldOut ? "disabled" : ""} data-id=\"${product.id}\">${soldOut ? "Sold out" : "Add to cart"}</button>\n\
+              </div>\n\
+            </div>\n\
           `;
         }).join('') : '<div class="not-found">No bags found in this category.</div>'}
       </div>
