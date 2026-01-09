@@ -16,7 +16,9 @@ function loadProducts() {
   const stored = localStorage.getItem('products');
   if (stored) {
     try {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      window.products = parsed;
+      return parsed;
     } catch (e) {}
   }
   return window.products;
@@ -150,14 +152,15 @@ function checkoutCart() {
   });
   // Persist updated products to localStorage and sync in-memory window.products
   saveProducts(allProducts);
-  if (window.products) {
-    window.products = allProducts;
-  }
+  window.products = allProducts;
   // Clear cart
   cart = [];
   saveCart();
   updateCartCount();
   renderCart();
+  // Force reload allProducts from localStorage to ensure UI reflects new stock
+  allProducts = loadProducts();
+  window.products = allProducts;
   renderProducts();
   // Broadcast cart and product update to other tabs
   localStorage.setItem('cart', JSON.stringify(cart));
@@ -300,6 +303,7 @@ console.log('DEBUG: searchInput', searchInput);
 // Ensure products are loaded before rendering and searching
 function initProductSearch() {
   allProducts = loadProducts();
+  window.products = allProducts;
   if (!allProducts || !Array.isArray(allProducts)) {
     allProducts = window.products;
   }
@@ -311,3 +315,17 @@ function initProductSearch() {
   }
 }
 initProductSearch();
+
+// Listen for storage changes (cart/products) and reload products/cart in all tabs
+window.addEventListener('storage', function(e) {
+  if (e.key === 'products') {
+    allProducts = loadProducts();
+    window.products = allProducts;
+    renderProducts();
+  }
+  if (e.key === 'cart') {
+    cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    updateCartCount();
+    renderCart();
+  }
+});
