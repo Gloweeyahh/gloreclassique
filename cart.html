@@ -20,7 +20,17 @@
     <span class="brand-header-top">Gloré</span>
     <span class="brand-header-bottom">Classique</span>
   </a>
-  <div style="flex:1"></div>
+  <form class="header-search" action="shop.html" method="get" autocomplete="off" role="search">
+    <input type="search" name="search" class="search-input" placeholder="Search bags, styles, moods..." aria-label="Search products">
+    <button type="submit" class="search-btn" aria-label="Search">
+      <span class="search-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2"/>
+          <line x1="14.2" y1="14.2" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </button>
+  </form>
   <button class="cart-btn" type="button" aria-label="Edit cart">
     <span class="cart-icon-wrap" style="position:relative;display:inline-block;">
       <span class="cart-icon">🛒</span>

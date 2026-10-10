@@ -1752,3 +1752,118 @@ body.panel-open {
   font-size: 1.2rem;
   margin: 1rem 0;
 }
+
+:root {
+  --store-header-height: 100px;
+}
+
+html {
+  scroll-padding-top: calc(var(--store-header-height) + env(safe-area-inset-top) + 16px);
+}
+
+body {
+  padding-top: calc(var(--store-header-height) + env(safe-area-inset-top));
+}
+
+.top-bar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 280;
+  display: grid;
+  grid-template-columns: 44px minmax(140px, 180px) minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 16px;
+  height: calc(var(--store-header-height) + env(safe-area-inset-top));
+  padding: calc(12px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left));
+  background: rgba(253, 250, 247, 0.97);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 4px 20px rgba(75, 46, 33, 0.06);
+}
+
+.top-bar .hamburger-wrap {
+  grid-column: 1;
+  width: 44px;
+}
+
+.top-bar .brand-header-stack {
+  grid-column: 2;
+  min-width: 0;
+  height: auto;
+  max-height: none;
+  margin: 0;
+  justify-self: center;
+}
+
+.top-bar .brand-header-top {
+  font-size: 2.5rem;
+  animation: none;
+}
+
+.top-bar .brand-header-bottom {
+  font-size: 1.5rem;
+  animation: none;
+}
+
+.top-bar .header-search {
+  grid-column: 3;
+  min-width: 0;
+  width: 100%;
+  max-width: 640px;
+  height: 44px;
+  margin: 0;
+  justify-self: center;
+}
+
+.top-bar .search-input {
+  min-width: 0;
+  font-size: 1rem;
+}
+
+.top-bar .search-btn {
+  flex-shrink: 0;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.top-bar .cart-btn {
+  grid-column: 4;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+
+.page {
+  padding-top: 24px;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --store-header-height: 132px;
+  }
+
+  .top-bar {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    grid-template-rows: 52px 44px;
+    gap: 8px 12px;
+  }
+
+  .top-bar .brand-header-top {
+    font-size: 1.8rem;
+  }
+
+  .top-bar .brand-header-bottom {
+    font-size: 1.1rem;
+  }
+
+  .top-bar .header-search {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .top-bar .cart-btn {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
