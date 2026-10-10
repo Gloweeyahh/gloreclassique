@@ -156,9 +156,8 @@ function toggleNav() {
   topBar.classList.toggle('nav-open');
 }
 </script>
+<script src="js/products.js"></script>
 <script src="js/main.js"></script>
-<script src="js/products.js"></script>
-<script src="js/products.js"></script>
 <script>
 // --- Robust Cart, Nav, and Sidebar Logic ---
 if (typeof getCart !== 'function') {
@@ -246,99 +245,17 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="fancy-eyebrow">${category}</div>
       <h2>${category} Bags</h2>
       <div class="shop-grid">
-        ${filtered.length ? filtered.map((product, idx) => {
-          let sortedColors = [];
-          if (product.colors && product.colors.length > 0) {
-            sortedColors = [...product.colors].sort((a, b) => (a.stock === 0) - (b.stock === 0));
-          }
-          let selectedColor = 0;
-          let colorStock = sortedColors.length > 0 ? sortedColors[0].stock : 0;
-          let soldOut = colorStock === 0;
-          let swatchHtml = "";
-          if (sortedColors.length > 0) {
-            swatchHtml = `<div class=\"color-swatches\">${sortedColors.map((c, i) => `<span class=\"color-swatch\" title=\"${c.name}\" style=\"background:${c.swatch};\" data-img=\"${c.image}\" data-index=\"${i}\"></span>`).join("")}</div>`;
-          }
-          let priceHtml = `<span class=\"price\">₦${product.price.toLocaleString()}</span>`;
-          if (product.oldPrice) {
-            priceHtml = `<span class=\"old-price\">₦${product.oldPrice.toLocaleString()}</span> <span class=\"price\">₦${product.price.toLocaleString()}</span>`;
-          }
-          return `
-            <div class=\"product-card\">\n\
-              <div class=\"product-media\">\n\
-                <span class=\"ribbon\" style=\"display:${soldOut ? 'inline-block' : 'none'}\">Sold Out</span>\n\
-                <img src=\"${sortedColors.length > 0 ? sortedColors[0].image : product.image}\" alt=\"${product.name}\" class=\"product-img-main\">\n\
-                ${swatchHtml}\n\
-              </div>\n\
-              <h3>${product.name}</h3>\n\
-              <div class=\"product-meta\">\n\
-                ${priceHtml}\n\
-                <span class=\"stock\">${soldOut ? "Restock soon" : `${colorStock} left`}</span>\n\
-              </div>\n\
-              <div class=\"product-actions\">\n\
-                <button class=\"btn btn-primary btn-full\" ${soldOut ? "disabled" : ""} data-id=\"${product.id}\">${soldOut ? "Sold out" : "Add to cart"}</button>\n\
-              </div>\n\
-            </div>\n\
-          `;
-        }).join('') : '<div class="not-found">No bags found in this category.</div>'}
+        ${filtered.length ? '' : '<div class="not-found">No bags found in this category.</div>'}
       </div>
       <button class="btn btn-ghost" onclick="showCategoryList()">Back to Categories</button>
     `;
     categoryView.style.display = '';
     categoryList.style.display = 'none';
-    // Enable color swatch logic for each card
-    categoryView.querySelectorAll('.product-card').forEach((card, idx) => {
-      const product = filtered[idx];
-      let selectedColor = 0;
-      const imgEl = card.querySelector('.product-img-main');
-      const swatches = card.querySelectorAll('.color-swatch');
-      const stockEl = card.querySelector('.stock');
-      const button = card.querySelector('button');
-      if (swatches.length) {
-        swatches.forEach((swatch, i) => {
-          if (i === 0) swatch.classList.add('selected');
-          swatch.addEventListener('click', function() {
-            swatches.forEach(s => s.classList.remove('selected'));
-            swatch.classList.add('selected');
-            selectedColor = i;
-            imgEl.src = product.colors[i].image;
-            let colorStock = product.colors[i].stock;
-            stockEl.textContent = colorStock === 0 ? "Restock soon" : `${colorStock} left`;
-            if (colorStock === 0) {
-              /* Lines 232-233 omitted */
-              button.textContent = "Sold out";
-            } else {/* Lines 235-237 omitted */}
-          });
-        });
-      }
-      if (!button.disabled) {
-        button.onclick = () => {
-          let prodToCart = { ...product };
-          if (product.colors && product.colors.length) {/* Lines 245-248 omitted */}
-          if (typeof addToCart === 'function') addToCart(prodToCart);
-        };
-      }
-    });
+    const grid = categoryView.querySelector('.shop-grid');
+    filtered.forEach(product => grid.appendChild(createProductCard(product)));
   }
   window.showCategoryList = function() {
     categoryView.style.display = 'none';
-    categoryList.style.display = '';
-  };
-  document.querySelectorAll('.category-actions a').forEach(link => {
-    link.onclick = function(e) {
-      e.preventDefault();
-      const cat = decodeURIComponent(this.href.split('category=')[1] || '').replace(/\+/g, ' ');
-      renderCategoryBags(cat);
-    };
-  });
-
-  // Show category view on page load if category param is present
-  const params = new URLSearchParams(window.location.search);
-  const initialCategory = params.get('category');
-  if (initialCategory) {
-    renderCategoryBags(initialCategory.replace(/\+/g, ' '));
-  }
-});
-</script>
     categoryList.style.display = '';
   };
   document.querySelectorAll('.category-actions a').forEach(link => {
