@@ -105,7 +105,9 @@
                 </div>
                 <div class="form-group full-width"><label for="instructions">Delivery Instructions <span style="color:#aaa;font-weight:400;">(optional)</span></label><textarea id="instructions" name="instructions" rows="2"></textarea></div>
               </div>
-              <button type="submit" class="btn btn-primary btn-full checkout-pay-btn">Pay Now</button>
+              <p class="checkout-payment-note">Choose Paystack or bank transfer on the next step. Delivery costs are confirmed separately by the store.</p>
+              <p id="checkout-status" class="payment-status" role="status" aria-live="polite"></p>
+              <button type="submit" class="btn btn-primary btn-full checkout-pay-btn">Continue to payment</button>
             </form>
             <aside id="checkout-summary" class="checkout-summary"></aside>
           </div>
@@ -125,93 +127,8 @@
     </div>
   </div>
 </footer>
+<script src="js/products.js"></script>
 <script src="js/main.js"></script>
-<script>
-// --- Checkout Submission with Cart & Stock Update ---
-document.addEventListener('DOMContentLoaded', function() {
-  if (typeof updateCartCount === 'function') updateCartCount();
-
-  var checkoutForm = document.getElementById('checkout-form');
-  if (checkoutForm) {
-    checkoutForm.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      var form = e.target;
-
-      // --- PATCH: Only valid cart items ---
-      var cartArr = (typeof getCart === 'function' ? getCart() : []).filter(item => item.qty > 0);
-      if (!cartArr.length) {
-        alert('Your cart is empty.');
-        return;
-      }
-
-      // --- PATCH: Update stock & clear cart ---
-      if (typeof checkoutCart === 'function') checkoutCart();
-
-      // --- Prepare email summary ---
-      var summaryText = cartArr.map(function(item, idx) {
-        return (
-          (idx+1) + '. ' + item.name + (item.colorName ? ' (' + item.colorName + ')' : '') + 
-          ' x' + item.qty + ' - ₦' + item.price.toLocaleString()
-        );
-      }).join('\n');
-
-      var data = {
-        name: form.name.value,
-        email: form.email.value,
-        phone: form.phone.value,
-        address: form.address.value,
-        city: form.city.value,
-        state: form.state.value,
-        instructions: form.instructions.value,
-        cart: cartArr,
-        summary: summaryText
-      };
-
-      var btn = form.querySelector('button[type="submit"]');
-      var origBtn = btn ? btn.textContent : '';
-      if (btn) btn.textContent = 'Sending...';
-
-      try {
-        var res = await fetch('https://gloreclassique.onrender.com/api/send-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-
-        if (res.ok) {
-          form.reset();
-
-          // --- PATCH: Update cart and summary immediately ---
-          if (typeof renderCheckoutSummary === 'function') renderCheckoutSummary();
-          if (typeof updateCartCount === 'function') updateCartCount();
-
-          if (btn) btn.textContent = 'Order Sent!';
-          setTimeout(() => { if(btn) btn.textContent = origBtn; }, 2000);
-
-          // Redirect to payment page
-          window.location.href = 'payment.html';
-        } else {
-          if (btn) btn.textContent = origBtn;
-          alert('Failed to send order. Please try again.');
-        }
-      } catch (err) {
-        if (btn) btn.textContent = origBtn;
-        alert('Network error. Please try again.');
-      }
-    });
-  }
-
-  // Render summary on page load
-  if (typeof renderCheckoutSummary === 'function') renderCheckoutSummary();
-
-  // Listen for cart changes in other tabs
-  window.addEventListener('storage', function(e) {
-    if (e.key === 'cart') {
-      if (typeof renderCheckoutSummary === 'function') renderCheckoutSummary();
-      if (typeof updateCartCount === 'function') updateCartCount();
-    }
-  });
-});
-</script>
+<script src="js/checkout-payment.js"></script>
 </body>
 </html>

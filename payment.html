@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Payment | Gloré Classique</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="css/style.css">
   <style>
@@ -84,9 +85,24 @@
     <main>
       <section>
         <div class="shell">
-          <div class="fancy-eyebrow">Payment Details</div>
+          <a class="payment-back" href="checkout.html">&larr; Back to checkout</a>
+          <div class="fancy-eyebrow">The final step</div>
           <h2>Complete Your Payment</h2>
+          <p class="payment-intro">Choose how you would like to pay. Your order stays safe until payment is confirmed.</p>
+          <p id="payment-status" class="payment-status" role="status" aria-live="polite">Loading your order…</p>
+          <div id="payment-content" class="payment-layout" hidden>
+          <aside id="payment-summary" class="payment-summary"></aside>
           <div class="payment-details-box">
+            <section class="payment-option" id="paystack-option">
+              <div class="fancy-eyebrow">01 · Online payment</div>
+              <h3>Pay securely with Paystack</h3>
+              <p>Complete your payment on Paystack’s secure checkout. Available payment methods appear there. We never collect your card details.</p>
+              <button id="paystack-button" type="button" class="btn btn-primary btn-full">Pay with Paystack</button>
+              <p id="paystack-note" class="payment-note"></p>
+              <button id="verify-button" type="button" class="btn btn-ghost btn-full" hidden>Check payment status</button>
+            </section>
+            <details id="bank-option" class="payment-option">
+              <summary>02 · Prefer a bank transfer?</summary>
             <div class="account-details">
               <h3>Bank Transfer Details</h3>
               <ul class="account-list">
@@ -94,58 +110,25 @@
                 <li><strong>Account Number:</strong> 07036630817</li>
                 <li><strong>Account Name:</strong> Gloria Emeka</li>
               </ul>
-              <div class="alert-info">After payment, upload your proof of payment below.</div>
+              <div class="alert-info">Transfer the exact order total and include your order reference. Upload your receipt below. A transfer is not confirmed until the store reviews it.</div>
             </div>
             <form id="proof-form" class="proof-form" enctype="multipart/form-data">
               <h3>Upload Proof of Payment</h3>
-              <div class="form-group"><label for="payerName">Your Name</label><input type="text" id="payerName" name="payerName" required></div>
-              <div class="form-group"><label for="payerEmail">Your Email</label><input type="email" id="payerEmail" name="payerEmail" required></div>
-              <div class="form-group"><label for="orderInfo">Order Info <span style="color:#aaa;font-weight:400;">(optional)</span></label><input type="text" id="orderInfo" name="orderInfo"></div>
-              <div class="form-group"><label for="proofFile">Proof of Payment (image/pdf)</label><input type="file" id="proofFile" name="proofFile" accept="image/*,application/pdf" required></div>
+              <p class="payment-note">This receipt is linked to your order and the shipping details you already provided.</p>
+              <div class="form-group"><label for="proofFile">Proof of Payment (JPG, PNG, or PDF; maximum 3 MB)</label><input type="file" id="proofFile" name="proofFile" accept="image/jpeg,image/png,application/pdf" required></div>
               <button type="submit" class="btn btn-primary btn-full">Send Proof</button>
             </form>
-            <div id="proof-status" class="proof-status"></div>
+            </details>
+            <a class="btn btn-ghost" href="shop.html">Continue shopping</a>
+          </div>
           </div>
         </div>
       </section>
     </main>
   </div>
 </div>
-<script>
-document.getElementById('proof-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  var form = e.target;
-  var status = document.getElementById('proof-status');
-  status.textContent = '';
-  var btn = form.querySelector('button[type="submit"]');
-  var origBtn = btn ? btn.textContent : '';
-  if (btn) btn.textContent = 'Sending...';
-  var formData = new FormData(form);
-  try {
-    var res = await fetch('https://gloreclassique.onrender.com/api/send-proof', {
-      method: 'POST',
-      body: formData
-    });
-    if (res.ok) {
-      form.reset();
-      status.textContent = 'Proof sent! We will confirm your payment soon.';
-      status.style.color = 'green';
-      if (btn) btn.textContent = 'Sent!';
-      setTimeout(function(){
-        if(btn) btn.textContent = origBtn;
-        window.location.href = 'index.html';
-      }, 2000);
-    } else {
-      status.textContent = 'Failed to send proof. Please try again.';
-      status.style.color = 'red';
-      if (btn) btn.textContent = origBtn;
-    }
-  } catch (err) {
-    status.textContent = 'Network error. Please try again.';
-    status.style.color = 'red';
-    if (btn) btn.textContent = origBtn;
-  }
-});
-</script>
+<script src="js/products.js"></script>
+<script src="js/main.js"></script>
+<script src="js/checkout-payment.js"></script>
 </body>
 </html>

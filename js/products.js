@@ -1,4 +1,4 @@
-window.products = [
+const catalogProducts = [
   {
     id: 1,
     name: "Star Chain Bag",
@@ -265,3 +265,6 @@ window.products = [
   }
 
 ];
+
+if (typeof window !== 'undefined') window.products = catalogProducts;
+if (typeof module !== 'undefined') module.exports = catalogProducts;
