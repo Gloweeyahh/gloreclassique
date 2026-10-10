@@ -3,7 +3,8 @@
 // Utility: Get/Set Cart
 window.getCart = function() {
   try {
-    return JSON.parse(localStorage.getItem('cart') || '[]');
+    const items = JSON.parse(localStorage.getItem('cart') || '[]');
+    return Array.isArray(items) ? items : [];
   } catch (e) {
     return [];
   }
@@ -12,8 +13,7 @@ window.getCart = function() {
 window.setCart = function(newCart) {
   cart = newCart;
   saveCart();
-  updateCartCount();
-  renderCart();
+  refreshCart();
 };
 
 let cart = window.getCart();
@@ -57,22 +57,58 @@ function updateCartCount() {
 
 // Cart Sidebar UI
 function renderCart() {
-  const cartItems = document.getElementById('cart-items');
-  if (!cartItems) return;
+  renderCartItems(document.getElementById('cart-items'));
+}
+
+function renderCartItems(container) {
+  if (!container) return;
+  container.replaceChildren();
   if (cart.length === 0) {
-    cartItems.innerHTML = '<div style="text-align:center;color:#aaa;">Your cart is empty.</div>';
+    const message = document.createElement('p');
+    message.textContent = 'Your cart is empty.';
+    container.append(message);
     return;
   }
-  cartItems.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <img src="${item.image}" alt="${item.name}" class="cart-thumb">
-      <div class="cart-info">
-        <div class="cart-title">${item.name}${item.colorName ? ` <span class='cart-color'>(${item.colorName})</span>` : ''}</div>
-        <div class="cart-meta">₦${item.price.toLocaleString()} x ${item.qty}</div>
-      </div>
-      <button class="cart-remove" onclick="removeFromCart(${item.id}, ${item.colorName ? `'${item.colorName.replace(/'/g, "\\'")}'` : 'null'})">&times;</button>
-    </div>
-  `).join('');
+  cart.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'cart-item';
+    const image = document.createElement('img');
+    image.className = 'cart-thumb';
+    image.src = item.image;
+    image.alt = item.name;
+    const details = document.createElement('div');
+    details.className = 'cart-info';
+    const title = document.createElement('div');
+    title.className = 'cart-title';
+    title.textContent = item.name + (item.colorName ? ` (${item.colorName})` : '');
+    const meta = document.createElement('div');
+    meta.className = 'cart-meta';
+    meta.textContent = `₦${item.price.toLocaleString()} x ${item.qty}`;
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'cart-remove';
+    remove.textContent = '×';
+    remove.setAttribute('aria-label', `Remove ${title.textContent} from cart`);
+    remove.addEventListener('click', () => removeFromCart(item.id, item.colorName || null));
+    details.append(title, meta);
+    row.append(image, details, remove);
+    container.append(row);
+  });
+}
+
+function renderCartPage() {
+  renderCartItems(document.getElementById('cart-list'));
+  const total = document.getElementById('cart-total');
+  if (total) {
+    total.textContent = cart.length ? `Total: ₦${cart.reduce((amount, item) => amount + item.price * item.qty, 0).toLocaleString()}` : '';
+  }
+}
+
+function refreshCart() {
+  updateCartCount();
+  renderCart();
+  renderCartPage();
+  window.dispatchEvent(new Event('cart-updated'));
 }
 
 // Add to Cart (handles variants)
@@ -96,9 +132,7 @@ let currentQty = idx > -1 ? cart[idx].qty : 0;
   } else {
     cart.push({ ...product, qty: 1 });
   }
-  saveCart();
-  updateCartCount();
-  renderCart();
+  window.setCart(cart);
   showAddedToCartMessage();
 }
 
@@ -109,17 +143,97 @@ function removeFromCart(id, colorName) {
     if ((i.colorName || null) !== (colorName || null)) return true;
     return false;
   });
-  saveCart();
-  updateCartCount();
-  renderCart();
+  window.setCart(cart);
 }
 
 // Cart Sidebar Toggle
 function toggleCart() {
-  const sidebar = document.querySelector('.cart-sidebar');
-  const overlay = document.querySelector('.cart-overlay');
-  if (sidebar) sidebar.classList.toggle('active');
-  if (overlay) overlay.classList.toggle('active');
+  setPanel('cart', activePanel !== 'cart');
+}
+
+let activePanel = null;
+let panelOpener = null;
+
+function toggleNav() {
+  setPanel('nav', activePanel !== 'nav');
+}
+
+function setPanel(type, opened) {
+  const nextPanel = opened ? type : null;
+  const previousOpener = panelOpener;
+  if (opened) panelOpener = document.activeElement;
+  ['nav', 'cart'].forEach(panelType => {
+    const panel = document.querySelector(panelType === 'nav' ? '.side-nav' : '.cart-sidebar');
+    const overlay = document.querySelector(`.${panelType}-overlay`);
+    const trigger = document.querySelector(panelType === 'nav' ? '.hamburger' : '.cart-btn');
+    const selected = nextPanel === panelType;
+    if (panel) {
+      panel.classList.toggle('active', selected);
+      panel.inert = !selected;
+      panel.setAttribute('aria-hidden', String(!selected));
+    }
+    if (overlay) overlay.classList.toggle('active', selected);
+    if (trigger) {
+      trigger.setAttribute('aria-expanded', String(selected));
+      if (panelType === 'nav') trigger.classList.toggle('active', selected);
+    }
+  });
+  activePanel = nextPanel;
+  document.body.classList.toggle('panel-open', Boolean(nextPanel));
+  const topBar = document.querySelector('.top-bar');
+  if (topBar) topBar.classList.toggle('nav-open', nextPanel === 'nav');
+  if (opened) {
+    const panel = document.querySelector(type === 'nav' ? '.side-nav' : '.cart-sidebar');
+    if (panel) panel.querySelector('button, a[href]')?.focus();
+  } else if (previousOpener) {
+    previousOpener.focus();
+    panelOpener = null;
+  }
+}
+
+function initializeNavigation() {
+  ['nav', 'cart'].forEach(type => {
+    const panel = document.querySelector(type === 'nav' ? '.side-nav' : '.cart-sidebar');
+    const trigger = document.querySelector(type === 'nav' ? '.hamburger' : '.cart-btn');
+    const overlay = document.querySelector(`.${type}-overlay`);
+    const close = document.querySelector(`.close-${type}`);
+    if (panel) {
+      panel.id = `${type}-panel`;
+      panel.setAttribute('aria-label', type === 'nav' ? 'Store navigation' : 'Shopping cart');
+      panel.inert = true;
+      panel.setAttribute('aria-hidden', 'true');
+    }
+    if (trigger) {
+      trigger.setAttribute('aria-controls', `${type}-panel`);
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.addEventListener('click', () => setPanel(type, activePanel !== type));
+    }
+    if (overlay) overlay.addEventListener('click', () => setPanel(type, false));
+    if (close) close.addEventListener('click', () => setPanel(type, false));
+    if (panel) panel.addEventListener('click', event => {
+      if (event.target.closest('a[href]')) setPanel(type, false);
+    });
+  });
+  document.addEventListener('keydown', event => {
+    if (!activePanel) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      setPanel(activePanel, false);
+    } else if (event.key === 'Tab') {
+      const panel = document.querySelector(activePanel === 'nav' ? '.side-nav' : '.cart-sidebar');
+      const controls = Array.from(panel.querySelectorAll('a[href], button:not([disabled]), input:not([disabled])'))
+        .filter(control => control.getClientRects().length > 0);
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  });
 }
 
 // Checkout: Decrement stock, clear cart, update UI/storage
@@ -257,9 +371,24 @@ function showAddedToCartMessage(message = 'Added to cart.') {
 document.addEventListener('DOMContentLoaded', () => {
   allProducts = loadProducts();
   window.products = allProducts;
-  renderProducts();
-  updateCartCount();
-  renderCart();
+  initializeNavigation();
   const search = document.querySelector('.search-input');
-  if (search) search.addEventListener('input', renderProducts);
+  if (search) {
+    search.value = new URLSearchParams(window.location.search).get('search') || '';
+    search.addEventListener('input', renderProducts);
+    const form = search.closest('form');
+    if (form) form.addEventListener('submit', event => {
+      event.preventDefault();
+      if (document.querySelector('#shop, #all-products')) renderProducts();
+      else window.location.assign('shop.html?search=' + encodeURIComponent(search.value.trim()));
+    });
+  }
+  renderProducts();
+  refreshCart();
+  window.addEventListener('storage', event => {
+    if (event.key === 'cart' || event.key === null) {
+      cart = window.getCart();
+      refreshCart();
+    }
+  });
 });

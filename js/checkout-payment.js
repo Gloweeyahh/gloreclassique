@@ -64,17 +64,21 @@
     const form = document.getElementById('checkout-form');
     const status = document.getElementById('checkout-status');
     const button = form.querySelector('button[type="submit"]');
+    let submitting = false;
     function render() {
       const items = window.getCart().filter(function(item) { return item.qty > 0; });
       summary(document.getElementById('checkout-summary'), items, items.reduce(function(total, item) { return total + item.price * item.qty * 100; }, 0));
-      button.disabled = items.length === 0;
+      button.disabled = submitting || items.length === 0;
       if (!items.length) showStatus(status, 'Your cart is empty. Add a bag from the shop to continue.', true);
+      else if (!submitting) showStatus(status, '');
     }
     render();
     window.addEventListener('storage', render);
+    window.addEventListener('cart-updated', render);
     form.addEventListener('submit', async function(event) {
       event.preventDefault();
       if (button.disabled) return;
+      submitting = true;
       button.disabled = true;
       button.textContent = 'Saving your order…';
       showStatus(status, 'Checking your items and preparing payment.');
@@ -86,8 +90,9 @@
         sessionStorage.setItem('order-token-' + data.order.id, data.token);
         window.location.assign('payment.html?order=' + encodeURIComponent(data.order.id));
       } catch (error) {
+        submitting = false;
         showStatus(status, error.message || 'Please enable browser storage and try again.', true);
-        button.disabled = false;
+        button.disabled = window.getCart().length === 0;
         button.textContent = 'Continue to payment';
       }
     });

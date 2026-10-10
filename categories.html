@@ -16,11 +16,21 @@
       <span></span>
     </button>
   </div>
-  <div class="brand-header-stack">
+  <a class="brand-header-stack" href="index.html" aria-label="Gloré Classique home">
     <span class="brand-header-top">Gloré</span>
     <span class="brand-header-bottom">Classique</span>
-  </div>
-  <div style="flex:1"></div>
+  </a>
+  <form class="header-search" action="shop.html" method="get" autocomplete="off" role="search">
+    <input type="search" name="search" class="search-input" placeholder="Search bags, styles, moods..." aria-label="Search products">
+    <button type="submit" class="search-btn" aria-label="Search">
+      <span class="search-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2"/>
+          <line x1="14.2" y1="14.2" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </button>
+  </form>
   <button class="cart-btn" type="button" aria-label="View cart">
     <span class="cart-icon-wrap" style="position:relative;display:inline-block;">
       <span class="cart-icon">🛒</span>
@@ -28,7 +38,7 @@
     </span>
   </button>
 </div>
-<div class="nav-overlay"></div>
+<div class="nav-overlay" tabindex="-1"></div>
 <div class="cart-overlay" tabindex="-1"></div>
 <aside class="cart-sidebar">
   <div class="cart-header">
@@ -113,6 +123,7 @@
 </main>
 </div>
 <nav class="side-nav">
+  <button class="close-nav" type="button" aria-label="Close navigation">&times;</button>
   <div class="nav-brand">
     <a href="index.html" class="logo">Gloré Classique</a>
     <div class="tagline">Curated · Affordable · Luxury</div>
@@ -124,7 +135,6 @@
       <li><a href="cart.html">Edit Cart <span id="nav-cart-count" class="cart-count">0</span></a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
-    <button class="close-nav" type="button" aria-label="Close navigation" style="display:none">&times;</button>
     <div class="nav-cta">
       <a href="https://instagram.com/glore_classique" target="_blank" rel="noopener" class="pill">@glore_classique</a>
       <a class="btn btn-primary btn-full" href="shop.html">Shop now</a>
@@ -144,136 +154,8 @@
   </div>
 </footer>
 
-<script>
-function toggleNav() {
-  const nav = document.querySelector('.side-nav');
-  const hamburger = document.querySelector('.hamburger');
-  const overlay = document.querySelector('.nav-overlay');
-  const topBar = document.querySelector('.top-bar');
-  nav.classList.toggle('active');
-  hamburger.classList.toggle('active');
-  overlay.classList.toggle('active');
-  topBar.classList.toggle('nav-open');
-}
-</script>
 <script src="js/products.js"></script>
 <script src="js/main.js"></script>
-<script>
-// --- Robust Cart, Nav, and Sidebar Logic ---
-if (typeof getCart !== 'function') {
-  window.getCart = function() {
-    try {
-      return JSON.parse(localStorage.getItem('cart') || '[]');
-    } catch (e) {
-      return [];
-    }
-  };
-}
-if (typeof updateCartCount !== 'function') {
-  window.updateCartCount = function() {
-    var cart = getCart();
-    var count = cart.reduce(function(sum, item) { return sum + (item.qty || 0); }, 0);
-    var els = [
-      document.getElementById('cart-count'),
-      document.getElementById('nav-cart-count')
-    ];
-    els.forEach(function(el) { if (el) el.textContent = count; });
-  };
-}
-document.addEventListener('DOMContentLoaded', function() {
-  // Always update cart count on load
-  updateCartCount();
-  // Nav and cart sidebar open/close
-  var hamburger = document.querySelector('.hamburger');
-  var navOverlay = document.querySelector('.nav-overlay');
-  var sideNav = document.querySelector('.side-nav');
-  var topBar = document.querySelector('.top-bar');
-  var closeNav = document.querySelector('.close-nav');
-  var cartBtn = document.querySelector('.cart-btn');
-  var cartSidebar = document.querySelector('.cart-sidebar');
-  var cartOverlay = document.querySelector('.cart-overlay');
-  if (hamburger) {
-    hamburger.onclick = function() {
-      sideNav.classList.toggle('active');
-      navOverlay.classList.toggle('active');
-      topBar.classList.toggle('nav-open');
-    };
-  }
-  if (navOverlay) {
-    navOverlay.onclick = function() {
-      sideNav.classList.remove('active');
-      navOverlay.classList.remove('active');
-      topBar.classList.remove('nav-open');
-    };
-  }
-  if (closeNav) {
-    closeNav.onclick = function() {
-      sideNav.classList.remove('active');
-      navOverlay.classList.remove('active');
-      topBar.classList.remove('nav-open');
-    };
-  }
-  if (cartBtn) {
-    cartBtn.onclick = function(e) {
-      e.preventDefault();
-      cartSidebar.classList.add('active');
-      cartOverlay.classList.add('active');
-    };
-  }
-  if (cartOverlay) {
-    cartOverlay.onclick = function() {
-      cartSidebar.classList.remove('active');
-      cartOverlay.classList.remove('active');
-    };
-  }
-  var closeCart = document.querySelector('.close-cart');
-  if (closeCart) {
-    closeCart.onclick = function() {
-      cartSidebar.classList.remove('active');
-      cartOverlay.classList.remove('active');
-    };
-  }
-
-  // --- In-page category view logic ---
-  const products = window.products || [];
-  const categoryList = document.getElementById('category-list');
-  const categoryView = document.getElementById('category-view');
-  function renderCategoryBags(category) {
-    if (!categoryView) return;
-    const filtered = products.filter(p => p.category === category);
-    categoryView.innerHTML = `
-      <div class="fancy-eyebrow">${category}</div>
-      <h2>${category} Bags</h2>
-      <div class="shop-grid">
-        ${filtered.length ? '' : '<div class="not-found">No bags found in this category.</div>'}
-      </div>
-      <button class="btn btn-ghost" onclick="showCategoryList()">Back to Categories</button>
-    `;
-    categoryView.style.display = '';
-    categoryList.style.display = 'none';
-    const grid = categoryView.querySelector('.shop-grid');
-    filtered.forEach(product => grid.appendChild(createProductCard(product)));
-  }
-  window.showCategoryList = function() {
-    categoryView.style.display = 'none';
-    categoryList.style.display = '';
-  };
-  document.querySelectorAll('.category-actions a').forEach(link => {
-    link.onclick = function(e) {
-      e.preventDefault();
-      const cat = decodeURIComponent(this.href.split('category=')[1] || '').replace(/\+/g, ' ');
-      renderCategoryBags(cat);
-    };
-  });
-
-  // Show category view on page load if category param is present
-  const params = new URLSearchParams(window.location.search);
-  const initialCategory = params.get('category');
-  if (initialCategory) {
-    renderCategoryBags(initialCategory.replace(/\+/g, ' '));
-  }
-});
-</script>
-
+<script src="js/categories.js"></script>
 </body>
 </html>

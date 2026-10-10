@@ -10,40 +10,44 @@
 <body>
 <div class="top-bar">
   <div class="hamburger-wrap">
-    <button class="hamburger" onclick="toggleNav()" aria-label="Toggle navigation">
+    <button class="hamburger" type="button" aria-label="Toggle navigation">
       <span></span>
       <span></span>
       <span></span>
     </button>
   </div>
-  <div class="brand-header-stack">
+  <a class="brand-header-stack" href="index.html" aria-label="Gloré Classique home">
     <span class="brand-header-top">Gloré</span>
     <span class="brand-header-bottom">Classique</span>
-  </div>
-  <div style="flex:1"></div>
-  <button class="cart-btn" onclick="toggleCart()" aria-label="View cart">
+  </a>
+  <form class="header-search" action="shop.html" method="get" autocomplete="off" role="search">
+    <input type="search" name="search" class="search-input" placeholder="Search bags, styles, moods..." aria-label="Search products">
+    <button type="submit" class="search-btn" aria-label="Search">
+      <span class="search-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2"/>
+          <line x1="14.2" y1="14.2" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </button>
+  </form>
+  <button class="cart-btn" type="button" aria-label="View cart">
     <span class="cart-icon-wrap" style="position:relative;display:inline-block;">
       <span class="cart-icon">🛒</span>
       <span id="cart-count" class="cart-count">0</span>
     </span>
   </button>
-<script>
-  document.querySelector('.cart-btn').onclick = function(e) {
-    e.preventDefault();
-    if (typeof toggleCart === 'function') toggleCart();
-  };
-</script>
 </div>
-<div class="nav-overlay"></div>
-<div class="cart-overlay" onclick="toggleCart()"></div>
+<div class="nav-overlay" tabindex="-1"></div>
+<div class="cart-overlay" tabindex="-1"></div>
 <aside class="cart-sidebar">
   <div class="cart-header">
     <h3>Your Cart</h3>
-    <button class="close-cart" onclick="toggleCart()">&times;</button>
+    <button class="close-cart" type="button" aria-label="Close cart">&times;</button>
   </div>
   <div id="cart-items" class="cart-items"></div>
   <div class="cart-footer">
-    <button class="btn btn-ghost" onclick="continueShopping()">Add more to cart</button>
+    <a class="btn btn-ghost" href="shop.html">Add more to cart</a>
     <a class="btn btn-primary" href="checkout.html">Checkout</a>
   </div>
 </aside>
@@ -75,6 +79,7 @@
 </main>
 </div>
 <nav class="side-nav">
+  <button class="close-nav" type="button" aria-label="Close navigation">&times;</button>
   <div class="nav-brand">
     <a href="index.html" class="logo">Gloré Classique</a>
     <div class="tagline">Curated · Affordable · Luxury</div>
@@ -105,18 +110,7 @@
   </div>
 </footer>
 
-<script>
-function toggleNav() {
-  const nav = document.querySelector('.side-nav');
-  const hamburger = document.querySelector('.hamburger');
-  const overlay = document.querySelector('.nav-overlay');
-  const topBar = document.querySelector('.top-bar');
-  nav.classList.toggle('active');
-  hamburger.classList.toggle('active');
-  overlay.classList.toggle('active');
-  topBar.classList.toggle('nav-open');
-}
-</script>
+<script src="js/products.js"></script>
 <script src="js/main.js"></script>
 
 </body>
