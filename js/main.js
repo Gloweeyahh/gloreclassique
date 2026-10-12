@@ -1,6 +1,3 @@
-// --- Cart & Product Logic ---
-
-// Utility: Get/Set Cart
 window.getCart = function() {
   try {
     const items = JSON.parse(localStorage.getItem('cart') || '[]');
